@@ -1,0 +1,42 @@
+[2026-04-29 04:14:22] [ERROR] [guest] [::1] PHP Error [2]: Undefined variable $app in C:\xampps\htdocs\flowershop_system\routes\routes.php on line 7
+[2026-04-29 04:14:22] [ERROR] [guest] [::1] Uncaught ErrorException: Undefined variable $app in C:\xampps\htdocs\flowershop_system\routes\routes.php:7
+#0 C:\xampps\htdocs\flowershop_system\routes\routes.php(7): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 7)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(56): require_once('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(38): App->run()
+#3 {main}
+[2026-04-29 04:23:40] [ERROR] [guest] [::1] Uncaught Error: Call to undefined method AuthController::requireGuest() in C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php:18
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->loginForm(Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#2 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#3 C:\xampps\htdocs\flowershop_system\public\index.php(38): App->run()
+#4 {main}
+[2026-04-29 04:27:15] [ERROR] [guest] [::1] Uncaught Error: Call to undefined function csrf_field() in C:\xampps\htdocs\flowershop_system\app\views\auth\login.php:26
+#0 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require()
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(19): Controller->view('auth/login', Array, 'main')
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->loginForm(Array)
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#4 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#5 C:\xampps\htdocs\flowershop_system\public\index.php(38): App->run()
+#6 {main}
+[2026-04-29 06:03:53] [ERROR] [guest] [::1] Uncaught TypeError: Session::flash(): Argument #2 ($message) must be of type string, array given, called in C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php on line 58 in C:\xampps\htdocs\flowershop_system\core\Session.php:67
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(58): Session::flash('old', Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->login(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-04-29 12:22:25] [ERROR] [guest] [::1] Uncaught TypeError: Session::flash(): Argument #2 ($message) must be of type string, array given, called in C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php on line 58 in C:\xampps\htdocs\flowershop_system\core\Session.php:67
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(58): Session::flash('old', Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->login(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-04-29 12:43:18] [ERROR] [guest] [::1] Uncaught TypeError: Session::flash(): Argument #2 ($message) must be of type string, array given, called in C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php on line 58 in C:\xampps\htdocs\flowershop_system\core\Session.php:67
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(58): Session::flash('old', Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->login(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-04-29 13:05:08] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}

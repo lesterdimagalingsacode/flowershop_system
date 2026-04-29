@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@source "../../app/views/**/*.php";
+
+@theme {
+    --color-deep:    #0f0608;
+    --color-card:    #1a0c0e;
+    --color-surface: #231214;
+    --color-rose:    #e8607a;
+    --color-gold:    #c9a96e;
+    --color-petal:   #f2c4ce;
+    --color-muted:   #8a6a6e;
+    --color-subtle:  #6b4a4e;
+    --color-border:  #2e1a1d;
+
+    --font-display: 'Roboto', Georgia, serif;
+    --font-body:    'DM Sans', ui-sans-serif, system-ui;
+}
