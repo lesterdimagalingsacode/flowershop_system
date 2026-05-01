@@ -26,6 +26,9 @@ class AuthController extends Controller {
     public function login(): void {
         $this->requireGuest();
 
+        // Clean up expired attempts
+        RateLimiter::purgeOld();
+
         // CSRF check
         CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
             ?: $this->flashRedirect('/login', 'Invalid request. Please try again.', 'error');
@@ -54,7 +57,6 @@ class AuthController extends Controller {
         );
 
         if (!$user) {
-            // Record failed attempt for rate limiting
             RateLimiter::hit('login');
 
             Session::flash('message', 'Invalid email or password.', 'error');
@@ -63,22 +65,20 @@ class AuthController extends Controller {
             return;
         }
 
-        // Success — clear rate limit, start session
+        // Success
         RateLimiter::clear('login');
         Session::login($user);
 
-        // Log the action
         Logger::info('User logged in', [
             'user_id' => $user['id'],
             'email'   => $user['email'],
             'role'    => $user['role'],
         ]);
 
-        // Redirect based on role
         if (Session::isStaff()) {
-            $this->flashRedirect('/admin/dashboard', 'Welcome back, ' . $user['name'] . '!');
+            $this->flashRedirect('/admin/dashboard', 'Welcome back, ' . $user['first_name'] . '!');
         } else {
-            $this->flashRedirect('/shop', 'Welcome back, ' . $user['name'] . '!');
+            $this->flashRedirect('/shop', 'Welcome back, ' . $user['first_name'] . '!');
         }
     }
 
@@ -101,7 +101,9 @@ class AuthController extends Controller {
 
         // Validate
         $validator = Validator::make($_POST, [
-            'name'                  => 'required|min:2|max:100',
+            'first_name'            => 'required|min:2|max:50',
+            'middle_name'           => 'max:50',
+            'last_name'             => 'required|min:2|max:50',
             'email'                 => 'required|email|max:150',
             'password'              => 'required|min:8|max:255',
             'password_confirmation' => 'required',
@@ -115,7 +117,10 @@ class AuthController extends Controller {
 
         if ($validator->fails()) {
             Session::flash('errors', json_encode($validator->errors()));
-            Session::flash('old', json_encode(array_diff_key($_POST, ['password' => '', 'password_confirmation' => ''])));
+            Session::flash('old', json_encode(array_diff_key($_POST, [
+                'password'              => '',
+                'password_confirmation' => '',
+            ])));
             $this->redirect('/register');
             return;
         }
@@ -123,18 +128,23 @@ class AuthController extends Controller {
         // Check email uniqueness
         if ($this->userModel->emailExists($validator->get('email'))) {
             Session::flash('errors', json_encode(['email' => ['This email is already registered.']]));
-            Session::flash('old', json_encode(array_diff_key($_POST, ['password' => '', 'password_confirmation' => ''])));
+            Session::flash('old', json_encode(array_diff_key($_POST, [
+                'password'              => '',
+                'password_confirmation' => '',
+            ])));
             $this->redirect('/register');
             return;
         }
 
         // Create user
         $userId = $this->userModel->create([
-            'name'     => $validator->get('name'),
-            'email'    => $validator->get('email'),
-            'password' => $this->post('password'),
-            'phone'    => $validator->get('phone'),
-            'role'     => ROLE_CUSTOMER,
+            'first_name'  => $validator->get('first_name'),
+            'middle_name' => $this->post('middle_name') ?: null,
+            'last_name'   => $validator->get('last_name'),
+            'email'       => $validator->get('email'),
+            'password'    => $this->post('password'),
+            'phone'       => $validator->get('phone') ?: null,
+            'role'        => ROLE_CUSTOMER,
         ]);
 
         if (!$userId) {
@@ -146,9 +156,12 @@ class AuthController extends Controller {
         $user = $this->userModel->findById((int)$userId);
         Session::login($user);
 
-        Logger::info('New user registered', ['user_id' => $userId, 'email' => $validator->get('email')]);
+        Logger::info('New user registered', [
+            'user_id' => $userId,
+            'email'   => $validator->get('email'),
+        ]);
 
-        $this->flashRedirect('/shop', 'Welcome to 404: Flower Not Found! 🌸');
+        $this->flashRedirect('/shop', 'Welcome to Petal & Soul, ' . $user['first_name'] . '! 🌸');
     }
 
     // ── POST /logout ──────────────────────────

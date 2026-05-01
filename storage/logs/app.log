@@ -40,3 +40,27 @@
 #4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
 #5 {main}
 [2026-04-29 13:05:08] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-04-30 03:46:02] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-04-30 04:22:35] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-04-30 04:23:45] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-04-30 05:10:31] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-01 10:49:03] [ERROR] [guest] [::1] PHP Error [2]: Undefined array key 1 in C:\xampps\htdocs\flowershop_system\app\views\auth\login.php on line 35
+[2026-05-01 10:49:03] [ERROR] [guest] [::1] Uncaught ErrorException: Undefined array key 1 in C:\xampps\htdocs\flowershop_system\app\views\auth\login.php:35
+#0 C:\xampps\htdocs\flowershop_system\app\views\auth\login.php(35): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 35)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(19): Controller->view('auth/login', Array, 'main')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->loginForm(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-01 10:49:29] [ERROR] [guest] [::1] PHP Error [2]: Undefined array key 1 in C:\xampps\htdocs\flowershop_system\app\views\auth\login.php on line 35
+[2026-05-01 10:49:29] [ERROR] [guest] [::1] Uncaught ErrorException: Undefined array key 1 in C:\xampps\htdocs\flowershop_system\app\views\auth\login.php:35
+#0 C:\xampps\htdocs\flowershop_system\app\views\auth\login.php(35): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 35)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(19): Controller->view('auth/login', Array, 'main')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->loginForm(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}

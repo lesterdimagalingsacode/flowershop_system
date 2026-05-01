@@ -1,8 +1,9 @@
 <?php
 // ─────────────────────────────────────────────
 //  middleware/RateLimiter.php
-//  Limits login attempts per IP address.
-//  Max attempts stored in PHP session.
+//  Limits login attempts per IP + email.
+//  Attempts stored in DB — cannot be bypassed
+//  by clearing cookies or session.
 //  Blocks for RATE_LIMIT_DECAY minutes.
 // ─────────────────────────────────────────────
 
@@ -10,92 +11,150 @@ declare(strict_types=1);
 
 class RateLimiter {
 
+    private Database $db;
+
+    public function __construct() {
+        $this->db = Database::getInstance();
+    }
+
+    // ── Run the throttle check ────────────────
     public function handle(string $role = 'throttle', array $params = []): void {
-        $key = $this->getKey();
+        $ip    = $this->getIp();
+        $email = trim(strtolower($_POST['email'] ?? ''));
 
-        if ($this->isTooManyAttempts($key)) {
-            $seconds = $this->availableIn($key);
-            $minutes = ceil($seconds / 60);
+        if ($this->isTooManyAttempts($ip, $email)) {
+            $seconds = $this->availableIn($ip, $email);
+            $minutes = (int) ceil($seconds / 60);
 
-            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) || str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')) {
+            // JSON response for AJAX
+            if (
+                isset($_SERVER['HTTP_X_REQUESTED_WITH']) ||
+                str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')
+            ) {
                 http_response_code(429);
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'success' => false,
-                    'message' => "Too many attempts. Please try again in {$minutes} minute(s).",
+                    'success'     => false,
+                    'message'     => "Too many attempts. Please try again in {$minutes} minute(s).",
                     'retry_after' => $seconds,
                 ]);
                 exit;
             }
 
-            Session::flash('message', "Too many login attempts. Please try again in {$minutes} minute(s).", 'error');
+            // Normal redirect
+            Session::flash(
+                'message',
+                "Too many login attempts. Please try again in {$minutes} minute(s).",
+                'error'
+            );
             header('Location: ' . APP_URL . '/login');
             exit;
         }
     }
 
-    // ── Record a failed attempt ───────────────
+    // ── Record a failed attempt in DB ─────────
     public static function hit(string $action = 'login'): void {
-        $key  = self::buildKey($action);
-        $data = self::getData($key);
+        $db    = Database::getInstance();
+        $ip    = self::getIpStatic();
+        $email = trim(strtolower($_POST['email'] ?? ''));
 
-        $data['attempts'] = ($data['attempts'] ?? 0) + 1;
-        $data['first_attempt'] ??= time();
-
-        Session::set($key, $data);
+        $db->execute(
+            "INSERT INTO login_attempts (ip_address, email, attempted_at)
+             VALUES (?, ?, NOW())",
+            [$ip, $email]
+        );
     }
 
-    // ── Clear on successful login ─────────────
+    // ── Clear attempts on successful login ────
     public static function clear(string $action = 'login'): void {
-        $key = self::buildKey($action);
-        Session::delete($key);
+        $db    = Database::getInstance();
+        $ip    = self::getIpStatic();
+        $email = trim(strtolower($_POST['email'] ?? ''));
+
+        $db->execute(
+            "DELETE FROM login_attempts
+             WHERE ip_address = ? OR email = ?",
+            [$ip, $email]
+        );
     }
 
-    // ── Check if too many attempts ────────────
-    public static function isTooManyAttempts(string $key): bool {
-        $data = self::getData($key);
-        if (empty($data)) return false;
+    // ── Check if blocked ─────────────────────
+    public static function isTooManyAttempts(string $ip, string $email = ''): bool {
+        $db      = Database::getInstance();
+        $decay   = RATE_LIMIT_DECAY; // minutes
+        $max     = RATE_LIMIT_MAX;   // max attempts
 
-        $decaySeconds = RATE_LIMIT_DECAY * 60;
-        $elapsed      = time() - ($data['first_attempt'] ?? time());
+        $row = $db->queryOne(
+            "SELECT COUNT(*) as attempts
+             FROM login_attempts
+             WHERE (ip_address = ? OR email = ?)
+               AND attempted_at >= NOW() - INTERVAL ? MINUTE",
+            [$ip, $email, $decay]
+        );
 
-        // Reset if decay window has passed
-        if ($elapsed > $decaySeconds) {
-            Session::delete($key);
-            return false;
-        }
-
-        return ($data['attempts'] ?? 0) >= RATE_LIMIT_MAX;
+        return (int)($row['attempts'] ?? 0) >= $max;
     }
 
-    // ── Seconds until unlock ──────────────────
-    public static function availableIn(string $key): int {
-        $data = self::getData($key);
-        if (empty($data)) return 0;
+    // ── Seconds until block lifts ─────────────
+    public static function availableIn(string $ip, string $email = ''): int {
+        $db    = Database::getInstance();
+        $decay = RATE_LIMIT_DECAY;
 
-        $decaySeconds = RATE_LIMIT_DECAY * 60;
-        $elapsed      = time() - ($data['first_attempt'] ?? time());
-        return max(0, $decaySeconds - $elapsed);
+        // Find the oldest attempt in the current window
+        $row = $db->queryOne(
+            "SELECT MIN(attempted_at) as oldest
+             FROM login_attempts
+             WHERE (ip_address = ? OR email = ?)
+               AND attempted_at >= NOW() - INTERVAL ? MINUTE",
+            [$ip, $email, $decay]
+        );
+
+        if (empty($row['oldest'])) return 0;
+
+        $oldestTimestamp = strtotime($row['oldest']);
+        $unlocksAt       = $oldestTimestamp + ($decay * 60);
+        return max(0, $unlocksAt - time());
     }
 
     // ── Remaining attempts ────────────────────
     public static function remainingAttempts(string $action = 'login'): int {
-        $key  = self::buildKey($action);
-        $data = self::getData($key);
-        return max(0, RATE_LIMIT_MAX - ($data['attempts'] ?? 0));
+        $db    = Database::getInstance();
+        $ip    = self::getIpStatic();
+        $email = trim(strtolower($_POST['email'] ?? ''));
+        $decay = RATE_LIMIT_DECAY;
+
+        $row = $db->queryOne(
+            "SELECT COUNT(*) as attempts
+             FROM login_attempts
+             WHERE (ip_address = ? OR email = ?)
+               AND attempted_at >= NOW() - INTERVAL ? MINUTE",
+            [$ip, $email, $decay]
+        );
+
+        return max(0, RATE_LIMIT_MAX - (int)($row['attempts'] ?? 0));
     }
 
-    // ── Private helpers ───────────────────────
-    private function getKey(): string {
-        return self::buildKey('login');
+    // ── Auto-clean old attempts ───────────────
+    // Call this occasionally to keep the table clean
+    public static function purgeOld(): void {
+        $db    = Database::getInstance();
+        $decay = RATE_LIMIT_DECAY;
+
+        $db->execute(
+            "DELETE FROM login_attempts
+             WHERE attempted_at < NOW() - INTERVAL ? MINUTE",
+            [$decay]
+        );
     }
 
-    private static function buildKey(string $action): string {
-        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        return "rate_limit_{$action}_{$ip}";
+    // ── Helpers ───────────────────────────────
+    private function getIp(): string {
+        return self::getIpStatic();
     }
 
-    private static function getData(string $key): array {
-        return Session::get($key, []);
+    private static function getIpStatic(): string {
+        return $_SERVER['HTTP_X_FORWARDED_FOR']
+            ?? $_SERVER['REMOTE_ADDR']
+            ?? 'unknown';
     }
 }

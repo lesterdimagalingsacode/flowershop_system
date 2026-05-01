@@ -53,9 +53,9 @@ $router->get ('/payment/success',  [PaymentController::class,  'success']);
 $router->get ('/payment/failed',   [PaymentController::class,  'failed']);
 $router->post('/webhook/paymongo', [PaymentController::class,  'webhook']);
 
-// ══════════════════════════════════════════════
-//  ADMIN / STAFF ROUTES
-// ══════════════════════════════════════════════
+
+//ADMIN / STAFF ROUTES
+
 $router->group('/admin', function(Router $router) {
 
     // Dashboard
