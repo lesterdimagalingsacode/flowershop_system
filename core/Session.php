@@ -93,10 +93,13 @@ class Session {
         $_SESSION['_last_regenerated'] = time();
 
         self::set('auth_user', [
-            'id'    => $user['id'],
-            'name'  => $user['name'],
-            'email' => $user['email'],
-            'role'  => $user['role'],
+            'id'         => $user['id'],
+            'first_name' => $user['first_name'],
+            'middle_name'=> $user['middle_name'] ?? null,
+            'last_name'  => $user['last_name'],
+            'name'       => $user['name'], // full name from appendFullName()
+            'email'      => $user['email'],
+            'role'       => $user['role'],
         ]);
     }
 

@@ -39,8 +39,8 @@ function env(string $key, mixed $default = null): mixed {
 define('APP_NAME',    env('APP_NAME',  '404: Flower Not Found'));
 define('APP_ENV',     env('APP_ENV',   'development'));
 define('APP_DEBUG',   env('APP_DEBUG', 'true') === 'true');
-define('APP_URL', 'http://localhost/flowershop_system');
-//define('APP_URL', 'https://relish-pleading-managing.ngrok-free.dev/flowershop_system');
+//define('APP_URL', 'http://localhost/flowershop_system');
+define('APP_URL', 'https://relish-pleading-managing.ngrok-free.dev/flowershop_system');
 
 
 // ── Paths ─────────────────────────────────────

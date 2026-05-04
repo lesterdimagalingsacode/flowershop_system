@@ -64,3 +64,191 @@
 #5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
 #6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
 #7 {main}
+[2026-05-01 14:09:53] [INFO] [user:2] [::1] New user registered | {"user_id":"2","email":"kimlesterlumibao@gmail.com"}
+[2026-05-02 10:53:39] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-02 21:40:00] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-02 21:46:05] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-02 21:46:41] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-03 12:37:02] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-03 12:37:21] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/orders/index.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(273): Controller->view('orders/index', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->myOrders(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-03 12:37:54] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/orders/index.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(273): Controller->view('orders/index', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->myOrders(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 04:19:13] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 04:54:59] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-04 04:55:22] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 05:11:41] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-04 05:14:18] [INFO] [user:3] [::1] New user registered | {"user_id":"3","email":"ace@gmail.com"}
+[2026-05-04 05:15:09] [ERROR] [user:3] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/orders/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(296): Controller->view('orders/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 05:16:16] [ERROR] [user:3] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/orders/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(296): Controller->view('orders/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 05:18:41] [INFO] [user:3] [::1] User logged out | {"user_id":3}
+[2026-05-04 05:20:46] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-04 05:25:06] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-04 11:07:43] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 11:08:07] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(101): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 11:30:13] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(101): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 11:30:54] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 11:37:03] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 11:46:46] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 12:21:27] [ERROR] [user:2] [::1] Uncaught ParseError: syntax error, unexpected token "else", expecting end of file in C:\xampps\htdocs\flowershop_system\app\views\layouts\main.php:77
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(35): Controller->view('shop/cart', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->cart(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 12:21:29] [ERROR] [user:2] [::1] Uncaught ParseError: syntax error, unexpected token "else", expecting end of file in C:\xampps\htdocs\flowershop_system\app\views\layouts\main.php:77
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(35): Controller->view('shop/cart', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->cart(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 12:23:10] [ERROR] [user:2] [::1] Uncaught ParseError: syntax error, unexpected token "else", expecting end of file in C:\xampps\htdocs\flowershop_system\app\views\layouts\main.php:77
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(39): Controller->view('shop/catalog', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->catalog(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 12:41:41] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(101): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 12:54:41] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(101): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 12:55:17] [ERROR] [user:2] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(101): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-04 12:55:25] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:55:27] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:55:28] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:55:30] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:55:31] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:55:32] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:20] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:25] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:27] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:28] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:30] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:35] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 12:56:38] [ERROR] [user:2] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 13:01:44] [ERROR] [guest] [::1] Uncaught RuntimeException: Method productJson not found in ProductController in C:\xampps\htdocs\flowershop_system\core\Router.php:180
+#0 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#1 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#2 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#3 {main}
+[2026-05-04 13:22:51] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 13:26:10] [INFO] [user:4] [::1] New user registered | {"user_id":"4","email":"airanoveno123@gmail.com"}
+[2026-05-04 13:29:39] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-04 13:32:00] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-04 13:33:14] [INFO] [user:5] [::1] New user registered | {"user_id":"5","email":"ferinakarylsalamera@gmail.com"}
+[2026-05-04 13:33:28] [INFO] [user:3] [::1] User logged out | {"user_id":3}
+[2026-05-04 13:35:20] [INFO] [user:5] [::1] User logged out | {"user_id":5}
+[2026-05-04 13:36:11] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-04 13:39:32] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-04 13:42:22] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-04 13:44:43] [INFO] [user:6] [::1] New user registered | {"user_id":"6","email":"jamvillar@gmail.com"}
+[2026-05-04 13:54:40] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-04 14:36:42] [INFO] [user:7] [::1] New user registered | {"user_id":"7","email":"marjune0605@gmail.com"}
+[2026-05-04 14:38:00] [INFO] [user:7] [::1] User logged out | {"user_id":7}
+[2026-05-04 14:39:05] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-04 14:39:15] [INFO] [user:7] [::1] User logged in | {"user_id":7,"email":"marjune0605@gmail.com","role":"customer"}

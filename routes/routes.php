@@ -25,17 +25,26 @@ $router->post('/logout',   [AuthController::class, 'logout']);
 // ══════════════════════════════════════════════
 $router->group('/shop', function(Router $router) {
 
+    // 1. Exact static routes FIRST
     $router->get('',               [ProductController::class,  'catalog']);
-    $router->get('/{slug}',        [ProductController::class,  'show']);
+    $router->get('/search',        [ProductController::class,  'search']);
 
-    $router->get('/cart',          [OrderController::class,    'cart']);
+    // 2. Cart routes (must be before /{slug} wildcard)
+    $router->get ('/cart',         [OrderController::class,    'cart']);
     $router->post('/cart/add',     [OrderController::class,    'addToCart']);
     $router->post('/cart/update',  [OrderController::class,    'updateCart']);
     $router->post('/cart/remove',  [OrderController::class,    'removeFromCart']);
     $router->post('/cart/clear',   [OrderController::class,    'clearCart']);
 
+    // 3. Checkout (must be before /{slug} wildcard)
     $router->get ('/checkout',     [OrderController::class,    'checkoutForm']);
     $router->post('/checkout',     [OrderController::class,    'checkout']);
+
+    // 4. Product JSON for modal (must be before /{slug} wildcard)
+    $router->get('/product/{id}',  [ProductController::class,  'productJson']);
+
+    // 5. Wildcard LAST — catches /shop/{slug} for product detail
+    $router->get('/{slug}',        [ProductController::class,  'show']);
 
 });
 
@@ -54,7 +63,9 @@ $router->get ('/payment/failed',   [PaymentController::class,  'failed']);
 $router->post('/webhook/paymongo', [PaymentController::class,  'webhook']);
 
 
-//ADMIN / STAFF ROUTES
+// ══════════════════════════════════════════════
+//  ADMIN / STAFF ROUTES
+// ══════════════════════════════════════════════
 
 $router->group('/admin', function(Router $router) {
 

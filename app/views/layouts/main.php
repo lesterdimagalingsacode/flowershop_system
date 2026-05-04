@@ -18,7 +18,7 @@
 
                 <!-- Logo -->
                 <a href="<?= APP_URL ?>/" class="flex items-center gap-2 no-underline">
-                    <span class="text-xl font-bold text-forest tracking-wide" style="font-family: var(--font-body);">Petal & Soul</span>
+                    <span class="text-xl font-bold text-forest tracking-wide" style="font-family: var(--font-display);">Petal & Soul</span>
                 </a>
 
                 <!-- Desktop Nav -->
@@ -37,21 +37,20 @@
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13L5.4 5M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
                             </svg>
-                            <?php $cartCount = array_sum(array_column(Session::getCart(), 'quantity')); ?>
-                            <?php if ($cartCount > 0): ?>
-                                <span class="absolute -top-2 -right-2 bg-forest text-white text-[0.6rem] rounded-full w-4 h-4 flex items-center justify-center font-semibold">
-                                    <?= $cartCount ?>
-                                </span>
-                            <?php endif; ?>
+                            <?php $cartCount = (new Cart())->count(Session::userId()); ?>
+                            <span data-cart-count
+                                class="absolute -top-2 -right-2 bg-forest text-white text-[0.6rem] rounded-full w-4 h-4 flex items-center justify-center font-semibold <?= $cartCount === 0 ? 'hidden' : '' ?>">
+                                <?= $cartCount ?>
+                            </span>
                         </a>
 
                         <!-- User dropdown -->
                         <div class="relative group">
                             <button class="flex items-center gap-2 text-sm font-medium text-muted hover:text-forest transition-colors">
                                 <span class="w-8 h-8 rounded-full bg-gold-lt border border-forest/20 flex items-center justify-center text-xs font-bold text-forest">
-                                    <?= strtoupper(substr(Session::user()['name'], 0, 1)) ?>
+                                    <?= strtoupper(substr(Session::user()['first_name'] ?? Session::user()['name'] ?? 'U', 0, 1)) ?>
                                 </span>
-                                <span><?= e(explode(' ', Session::user()['name'])[0]) ?></span>
+                                <span><?= e(Session::user()['first_name'] ?? explode(' ', Session::user()['name'] ?? '')[0]) ?></span>
                                 <svg class="w-3 h-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
@@ -91,6 +90,7 @@
                 <div class="flex flex-col gap-4">
                     <a href="<?= APP_URL ?>/shop" class="text-sm font-medium text-muted hover:text-forest transition-colors">Shop</a>
                     <?php if (Session::isLoggedIn()): ?>
+                        <a href="<?= APP_URL ?>/shop/cart" class="text-sm font-medium text-muted hover:text-forest transition-colors">Cart</a>
                         <a href="<?= APP_URL ?>/orders" class="text-sm font-medium text-muted hover:text-forest transition-colors">My Orders</a>
                         <?php if (Session::isStaff()): ?>
                             <a href="<?= APP_URL ?>/admin/dashboard" class="text-sm font-medium text-muted hover:text-forest transition-colors">Dashboard</a>
@@ -159,19 +159,9 @@
         </div>
     </footer>
 
-    <script src="<?= APP_URL ?>/js/app.js"></script>
+    <!-- Scripts -->
     <script src="<?= APP_URL ?>/js/toast.js"></script>
-    <script>
-        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-            document.getElementById('mobile-menu')?.classList.toggle('hidden');
-        });
-        setTimeout(() => {
-            document.querySelectorAll('#flash-container > div').forEach(el => {
-                el.style.transition = 'opacity 0.5s';
-                el.style.opacity = '0';
-                setTimeout(() => el.remove(), 500);
-            });
-        }, 4000);
-    </script>
+    <script src="<?= APP_URL ?>/js/app.js"></script>
+
 </body>
 </html>

@@ -18,7 +18,7 @@
     </div>
 
     <!-- 3-column layout: tulip | bouquet (center, overlapping) | CTA -->
-    <div class="relative z-20 max-w-6xl mx-auto flex items-end justify-center gap-6 -mt-12">
+    <div class="relative z-20 max-w-6xl mx-auto flex items-end justify-center gap-6 -mt-5">
 
         <!-- Glow -->
         <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-72 bg-forest/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -35,7 +35,7 @@
              style="box-shadow: 0 40px 80px rgba(30,58,47,0.3);">
             <img src="<?= APP_URL ?>/images/Boquet.png"
                  alt="Bouquet"
-                 class="w-full object-cover">
+                 class="w-full object-cover z-50">
 
             <!-- Badge overlaid on bouquet bottom -->
             <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-3 flex items-center gap-3 shadow-md">
