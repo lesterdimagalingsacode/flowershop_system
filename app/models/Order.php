@@ -18,16 +18,19 @@ class Order {
         $orderNumber = $this->generateOrderNumber();
 
         return $this->db->insert(
-            "INSERT INTO orders (user_id, order_number, status, subtotal, delivery_fee, total_amount, delivery_address, notes)
-             VALUES (?, ?, 'pending', ?, ?, ?, ?, ?)",
+            "INSERT INTO orders (user_id, order_number, status, subtotal, delivery_fee, discount_amount, total_amount, delivery_address, notes, promo_code, payment_method)
+             VALUES (?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 $data['user_id'],
                 $orderNumber,
                 $data['subtotal'],
-                $data['delivery_fee'] ?? 0.00,
+                $data['delivery_fee']    ?? 0.00,
+                $data['discount_amount'] ?? 0.00,
                 $data['total_amount'],
                 $data['delivery_address'],
-                $data['notes'] ?? null,
+                $data['notes']           ?? null,
+                $data['promo_code']      ?? null,
+                $data['payment_method']  ?? 'cod',
             ]
         );
     }
@@ -155,12 +158,23 @@ class Order {
         );
     }
 
-    // ── Revenue stats ─────────────────────────
+    // ── Get payment for order ─────────────────
+    public function getPayment(int $orderId): array|false {
+        return $this->db->queryOne(
+            "SELECT * FROM payments WHERE order_id = ? ORDER BY created_at DESC LIMIT 1",
+            [$orderId]
+        );
+    }
+
+    // ══════════════════════════════════════════
+    //  DASHBOARD STATS
+    // ══════════════════════════════════════════
+
     public function getTotalRevenue(): float {
         $row = $this->db->queryOne(
             "SELECT SUM(total_amount) as revenue
-             FROM orders
-             WHERE status NOT IN ('cancelled') AND deleted_at IS NULL"
+            FROM orders
+            WHERE status = 'delivered' AND deleted_at IS NULL"
         );
         return (float)($row['revenue'] ?? 0);
     }
@@ -173,7 +187,71 @@ class Order {
         return (int)($row['total'] ?? 0);
     }
 
-    // ── Generate unique order number ──────────
+    public function getRevenueInRange(string $from, string $to): float {
+        $row = $this->db->queryOne(
+            "SELECT SUM(total_amount) as revenue
+            FROM orders
+            WHERE status = 'delivered' AND deleted_at IS NULL
+            AND DATE(created_at) BETWEEN ? AND ?",
+            [$from, $to]
+        );
+        return (float)($row['revenue'] ?? 0);
+    }
+
+    public function countInRange(string $from, string $to): int {
+        $row = $this->db->queryOne(
+            "SELECT COUNT(*) as total FROM orders
+             WHERE deleted_at IS NULL
+               AND DATE(created_at) BETWEEN ? AND ?",
+            [$from, $to]
+        );
+        return (int)($row['total'] ?? 0);
+    }
+
+    public function countNewCustomers(string $from, string $to): int {
+        $row = $this->db->queryOne(
+            "SELECT COUNT(DISTINCT user_id) as total FROM orders
+             WHERE deleted_at IS NULL
+               AND DATE(created_at) BETWEEN ? AND ?",
+            [$from, $to]
+        );
+        return (int)($row['total'] ?? 0);
+    }
+
+    public function getSalesByDay(string $from, string $to): array {
+        return $this->db->query(
+            "SELECT DATE(created_at) as date, COUNT(*) as orders
+             FROM orders
+             WHERE deleted_at IS NULL
+               AND DATE(created_at) BETWEEN ? AND ?
+             GROUP BY DATE(created_at)
+             ORDER BY date ASC",
+            [$from, $to]
+        );
+    }
+
+    public function getRevenueByDay(string $from, string $to): array {
+        return $this->db->query(
+            "SELECT DATE(created_at) as date, SUM(total_amount) as revenue
+            FROM orders
+            WHERE status = 'delivered' AND deleted_at IS NULL
+            AND DATE(created_at) BETWEEN ? AND ?
+            GROUP BY DATE(created_at)
+            ORDER BY date ASC",
+            [$from, $to]
+        );
+    }
+
+    public function getCountByStatus(): array {
+        return $this->db->query(
+            "SELECT status, COUNT(*) as total
+             FROM orders
+             WHERE deleted_at IS NULL
+             GROUP BY status
+             ORDER BY total DESC"
+        );
+    }
+
     private function generateOrderNumber(): string {
         return 'PS-' . strtoupper(substr(uniqid(), -6)) . '-' . date('Ymd');
     }

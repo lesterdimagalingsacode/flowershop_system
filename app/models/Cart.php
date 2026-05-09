@@ -22,10 +22,12 @@ class Cart {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Reformat to match existing cart structure
+        // Cast product_id to int so array keys are integers,
+        // matching the int keys built from selected_items[] in checkout.
         $cart = [];
         foreach ($rows as $row) {
-            $cart[$row['product_id']] = [
-                'product_id' => $row['product_id'],
+            $cart[(int)$row['product_id']] = [
+                'product_id' => (int) $row['product_id'],
                 'name'       => $row['name'],
                 'slug'       => $row['slug'],
                 'price'      => (float) $row['price'],

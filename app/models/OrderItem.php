@@ -42,4 +42,21 @@ class OrderItem {
             [$orderId]
         );
     }
+
+    // ── Best sellers (by quantity sold) ───────
+    public function getBestSellers(string $from, string $to, int $limit = 8): array {
+        return $this->db->query(
+            "SELECT p.name, SUM(oi.quantity) as total_sold, SUM(oi.subtotal) as total_revenue
+             FROM order_items oi
+             JOIN orders o ON oi.order_id = o.id
+             JOIN products p ON oi.product_id = p.id
+             WHERE o.status NOT IN ('cancelled')
+               AND o.deleted_at IS NULL
+               AND DATE(o.created_at) BETWEEN ? AND ?
+             GROUP BY oi.product_id, p.name
+             ORDER BY total_sold DESC
+             LIMIT ?",
+            [$from, $to, $limit]
+        );
+    }
 }

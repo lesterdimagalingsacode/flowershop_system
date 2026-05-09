@@ -41,7 +41,7 @@ define('APP_ENV',     env('APP_ENV',   'development'));
 define('APP_DEBUG',   env('APP_DEBUG', 'true') === 'true');
 //define('APP_URL', 'http://localhost/flowershop_system');
 define('APP_URL', 'https://relish-pleading-managing.ngrok-free.dev/flowershop_system');
-
+//define('APP_URL', 'https://petalandsoul.infinityfreeapp.com');
 
 // ── Paths ─────────────────────────────────────
 define('APP_PATH',    BASE_PATH . '/app');
@@ -75,11 +75,14 @@ define('PAYMONGO_WEBHOOK_SECRET',  env('PAYMONGO_WEBHOOK_SECRET'));
 define('PAYMONGO_BASE_URL',        'https://api.paymongo.com/v1');
 
 // ── Mailer ────────────────────────────────────
+// MAIL_DRIVER: 'mail' = PHP built-in (local), 'phpmailer' = SMTP (production)
+define('MAIL_DRIVER',       env('MAIL_DRIVER',      'mail'));
 define('MAIL_HOST',         env('MAIL_HOST',         'smtp.gmail.com'));
 define('MAIL_PORT',         (int) env('MAIL_PORT',   587));
+define('MAIL_ENCRYPTION',   env('MAIL_ENCRYPTION',   'tls'));
 define('MAIL_USERNAME',     env('MAIL_USERNAME'));
 define('MAIL_PASSWORD',     env('MAIL_PASSWORD'));
-define('MAIL_FROM_ADDRESS', env('MAIL_FROM_ADDRESS'));
+define('MAIL_FROM_ADDRESS', env('MAIL_FROM_ADDRESS', 'no-reply@petalsoul.com'));
 define('MAIL_FROM_NAME',    env('MAIL_FROM_NAME',    APP_NAME));
 
 // ── Pagination ────────────────────────────────
@@ -104,5 +107,10 @@ define('PAYMENT_PAID',      'paid');
 define('PAYMENT_FAILED',    'failed');
 define('PAYMENT_REFUNDED',  'refunded');
 
+// ── Pusher ────────────────────────────────────
+define('PUSHER_APP_ID',      env('PUSHER_APP_ID'));
+define('PUSHER_APP_KEY',     env('PUSHER_APP_KEY'));
+define('PUSHER_APP_SECRET',  env('PUSHER_APP_SECRET'));
+define('PUSHER_APP_CLUSTER', env('PUSHER_APP_CLUSTER', 'ap1'));
 
 // npx @tailwindcss/cli -i ./public/css/input.css -o ./public/css/app.css --watch

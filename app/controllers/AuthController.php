@@ -26,18 +26,14 @@ class AuthController extends Controller {
     public function login(): void {
         $this->requireGuest();
 
-        // Clean up expired attempts
         RateLimiter::purgeOld();
 
-        // CSRF check
         CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
             ?: $this->flashRedirect('/login', 'Invalid request. Please try again.', 'error');
 
-        // Rate limiting
         $limiter = new RateLimiter();
         $limiter->handle('throttle');
 
-        // Validate input
         $validator = Validator::make($_POST, [
             'email'    => 'required|email',
             'password' => 'required|min:6',
@@ -50,7 +46,6 @@ class AuthController extends Controller {
             return;
         }
 
-        // Verify credentials
         $user = $this->userModel->verifyCredentials(
             $validator->get('email'),
             $this->post('password')
@@ -58,14 +53,12 @@ class AuthController extends Controller {
 
         if (!$user) {
             RateLimiter::hit('login');
-
             Session::flash('message', 'Invalid email or password.', 'error');
             Session::flash('old', json_encode(['email' => $validator->get('email')]));
             $this->redirect('/login');
             return;
         }
 
-        // Success
         RateLimiter::clear('login');
         Session::login($user);
 
@@ -95,22 +88,19 @@ class AuthController extends Controller {
     public function register(): void {
         $this->requireGuest();
 
-        // CSRF check
         CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
             ?: $this->flashRedirect('/register', 'Invalid request. Please try again.', 'error');
 
-        // Validate
         $validator = Validator::make($_POST, [
             'first_name'            => 'required|min:2|max:50',
             'middle_name'           => 'max:50',
             'last_name'             => 'required|min:2|max:50',
             'email'                 => 'required|email|max:150',
-            'password'              => 'required|min:8|max:255',
+            'password' => 'required|strong_password|max:255',
             'password_confirmation' => 'required',
             'phone'                 => 'max:20',
         ]);
 
-        // Check password confirmation manually
         if ($this->post('password') !== $this->post('password_confirmation')) {
             $validator->validate(['password' => 'confirmed']);
         }
@@ -125,7 +115,6 @@ class AuthController extends Controller {
             return;
         }
 
-        // Check email uniqueness
         if ($this->userModel->emailExists($validator->get('email'))) {
             Session::flash('errors', json_encode(['email' => ['This email is already registered.']]));
             Session::flash('old', json_encode(array_diff_key($_POST, [
@@ -136,7 +125,6 @@ class AuthController extends Controller {
             return;
         }
 
-        // Create user
         $userId = $this->userModel->create([
             'first_name'  => $validator->get('first_name'),
             'middle_name' => $this->post('middle_name') ?: null,
@@ -152,8 +140,25 @@ class AuthController extends Controller {
             return;
         }
 
-        // Auto-login after registration
-        $user = $this->userModel->findById((int)$userId);
+        // Generate and save verification token
+        $token = bin2hex(random_bytes(32));
+        $this->userModel->setVerificationToken((int)$userId, $token);
+
+        // Send verification email
+        $user   = $this->userModel->findById((int)$userId);
+        $mailer = new Mailer();
+        $mailer->send(
+            $user['email'],
+            $user['first_name'],
+            'Verify your Petal & Soul account',
+            'emails/verify-email',
+            [
+                'name' => $user['first_name'],
+                'link' => APP_URL . '/verify-email?token=' . $token,
+            ]
+        );
+
+        // Auto-login
         Session::login($user);
 
         Logger::info('New user registered', [
@@ -161,7 +166,46 @@ class AuthController extends Controller {
             'email'   => $validator->get('email'),
         ]);
 
-        $this->flashRedirect('/shop', 'Welcome to Petal & Soul, ' . $user['first_name'] . '! 🌸');
+        $this->flashRedirect('/shop', 'Welcome to Petal & Soul, ' . $user['first_name'] . '! 🌸 Check your email to verify your account.');
+    }
+
+    // ── POST /resend-verification ─────────────
+    public function resendVerification(): void {
+        $this->requireAuth();
+
+        $userId = Session::userId();
+        $user   = $this->userModel->findById($userId);
+
+        if (!$user) {
+            $this->jsonError('User not found.');
+            return;
+        }
+
+        if ($this->userModel->isEmailVerified($userId)) {
+            $this->jsonSuccess([], 'Your email is already verified.');
+            return;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $this->userModel->setVerificationToken($userId, $token);
+
+        $mailer = new Mailer();
+        $sent   = $mailer->send(
+            $user['email'],
+            $user['first_name'],
+            'Verify your Petal & Soul account',
+            'emails/verify-email',
+            [
+                'name' => $user['first_name'],
+                'link' => APP_URL . '/verify-email?token=' . $token,
+            ]
+        );
+
+        if ($sent) {
+            $this->jsonSuccess([], 'Verification email sent! Check your inbox.');
+        } else {
+            $this->jsonError('Failed to send email. Please try again.');
+        }
     }
 
     // ── POST /logout ──────────────────────────

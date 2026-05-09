@@ -134,6 +134,9 @@
         </div>
     <?php endif; ?>
 
+    <!-- ── Verify Banner ── -->
+    <?php include VIEW_PATH . '/partials/_verify-banner.php'; ?>
+
     <!-- ── Page Content ── -->
     <main class="flex-1">
         <?= $content ?>
@@ -162,6 +165,74 @@
     <!-- Scripts -->
     <script src="<?= APP_URL ?>/js/toast.js"></script>
     <script src="<?= APP_URL ?>/js/app.js"></script>
+
+    <?php if (Session::isLoggedIn()): ?>
+    <!-- ── Pusher: real-time cart + order sync ── -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+    (function () {
+        const PUSHER_KEY     = '<?= PUSHER_APP_KEY ?>';
+        const PUSHER_CLUSTER = '<?= PUSHER_APP_CLUSTER ?>';
+        const USER_ID        = <?= (int) Session::userId() ?>;
+        const ORDER_ID       = <?= isset($order['id']) ? (int)$order['id'] : 'null' ?>;
+
+        if (!PUSHER_KEY) return;
+
+        const pusher = new Pusher(PUSHER_KEY, {
+            cluster: PUSHER_CLUSTER,
+            authEndpoint: '<?= APP_URL ?>/pusher/auth',  // ← add this
+            auth: {
+                headers: {
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content ?? ''
+                }
+            }
+        });
+
+        // ── Cart sync (private channel per user) ──
+        const cartChannel = pusher.subscribe('private-cart.' + USER_ID);
+
+        cartChannel.bind('pusher:subscription_error', () => {
+            // Auth failed — fall back silently
+        });
+
+        cartChannel.bind('cart-updated', function (data) {
+            const badges = document.querySelectorAll('[data-cart-count]');
+            badges.forEach(function (badge) {
+                const count = parseInt(data.cart_count, 10);
+                badge.textContent = count;
+                if (count === 0) {
+                    badge.classList.add('hidden');
+                } else {
+                    badge.classList.remove('hidden');
+                }
+            });
+        });
+
+        // ── Order status sync (if on order detail page) ──
+        if (ORDER_ID) {
+            const orderChannel = pusher.subscribe('private-order.' + ORDER_ID);
+
+            orderChannel.bind('status-changed', function (data) {
+                // Update status badge if element exists
+                const badge = document.getElementById('order-status-badge');
+                if (badge) {
+                    badge.textContent = data.label;
+                }
+
+                // Show toast notification
+                if (typeof Toast !== 'undefined') {
+                    Toast.info('Order status updated to: ' + data.label);
+                }
+
+                // Reload after short delay so timeline refreshes
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            });
+        }
+    })();
+    </script>
+    <?php endif; ?>
 
 </body>
 </html>

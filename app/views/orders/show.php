@@ -124,10 +124,24 @@
                                     : 'Free' ?>
                             </span>
                         </div>
+                        <?php if ((float)($order['discount_amount'] ?? 0) > 0): ?>
+                        <div class="flex justify-between">
+                            <span class="text-muted">Discount</span>
+                            <span class="text-green-600">−₱<?= number_format($order['discount_amount'], 2) ?></span>
+                        </div>
+                        <?php endif; ?>
                         <div class="flex justify-between pt-2 border-t border-border">
                             <span class="font-semibold text-text">Total</span>
                             <span class="font-bold text-forest">₱<?= number_format($order['total_amount'], 2) ?></span>
                         </div>
+                    </div>
+
+                    <!-- Payment method badge -->
+                    <div class="mt-4 pt-4 border-t border-border flex items-center justify-between text-xs text-muted">
+                        <span>Payment</span>
+                        <span class="font-medium text-text capitalize">
+                            <?= $order['payment_method'] === 'online' ? '💳 Online Payment' : '💵 Cash on Delivery' ?>
+                        </span>
                     </div>
                 </div>
 
@@ -143,6 +157,20 @@
                     <?php endif; ?>
                 </div>
 
+                <!-- ── Pay Now (pending online payment only) ── -->
+                <?php if ($order['status'] === 'pending' && $order['payment_method'] === 'online'): ?>
+                <form method="POST" action="<?= APP_URL ?>/payment/retry/<?= (int)$order['id'] ?>">
+                    <?= csrf_field() ?>
+                    <button type="submit"
+                        class="w-full bg-forest hover:bg-pine text-white text-sm font-semibold py-3 rounded-full transition-all hover:-translate-y-px shadow-sm">
+                        💳 Complete Payment
+                    </button>
+                </form>
+                <p class="text-xs text-muted text-center -mt-2">
+                    Your order is saved. Complete payment to confirm it.
+                </p>
+                <?php endif; ?>
+
                 <!-- Cancel button -->
                 <?php if (in_array($order['status'], ['pending', 'confirmed'])): ?>
                 <form method="POST" action="<?= APP_URL ?>/orders/<?= $order['id'] ?>/cancel">
@@ -156,7 +184,7 @@
                 <?php endif; ?>
 
                 <a href="<?= APP_URL ?>/shop"
-                   class="block w-full bg-forest hover:bg-pine text-white text-sm font-medium text-center py-2.5 rounded-full transition">
+                   class="block w-full bg-white border border-border hover:border-forest text-text text-sm font-medium text-center py-2.5 rounded-full transition">
                     Continue Shopping
                 </a>
 

@@ -31,6 +31,16 @@ class User {
         return $user ? $this->appendFullName($user) : false;
     }
 
+    // ── Find by ID (static) ───────────────────
+    public static function find(int $id): ?array {
+        $db  = Database::getInstance();
+        $row = $db->queryOne(
+            "SELECT * FROM users WHERE id = :id AND deleted_at IS NULL",
+            [':id' => $id]
+        );
+        return $row ?: null;
+    }
+
     // ── Get all users (admin) ─────────────────
     public function getAll(int $limit = 10, int $offset = 0): array {
         $users = $this->db->query(
@@ -48,6 +58,48 @@ class User {
         $row = $this->db->queryOne(
             "SELECT COUNT(*) as total FROM users WHERE deleted_at IS NULL"
         );
+        return (int) ($row['total'] ?? 0);
+    }
+
+    // ── Get filtered users (admin, paginated) ─
+    public static function getFiltered(array $filters, int $page = 1, int $perPage = 15): array
+    {
+        $db     = Database::getInstance();
+        $offset = ($page - 1) * $perPage;
+
+        [$where, $params] = self::buildWhereClause($filters);
+
+        $sql = "
+            SELECT id, first_name, middle_name, last_name, email, role, is_active, created_at, deleted_at
+            FROM users
+            {$where}
+            ORDER BY created_at DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $params[':limit']  = $perPage;
+        $params[':offset'] = $offset;
+
+        $users = $db->query($sql, $params);
+
+        // Append computed full name so views can use $user['name']
+        return array_map(function(array $u): array {
+            $parts    = array_filter([$u['first_name'] ?? '', $u['middle_name'] ?? '', $u['last_name'] ?? '']);
+            $u['name'] = implode(' ', $parts);
+            return $u;
+        }, $users);
+    }
+
+    // ── Count filtered users ──────────────────
+    public static function countFiltered(array $filters): int
+    {
+        $db = Database::getInstance();
+
+        [$where, $params] = self::buildWhereClause($filters);
+
+        $sql = "SELECT COUNT(*) as total FROM users {$where}";
+
+        $row = $db->queryOne($sql, $params);
         return (int) ($row['total'] ?? 0);
     }
 
@@ -119,6 +171,21 @@ class User {
         );
     }
 
+    // ── Update single field (static, whitelisted) ─
+    public static function updateField(int $id, string $field, mixed $value): bool
+    {
+        $allowed = ['role', 'is_active'];
+        if (! in_array($field, $allowed, true)) {
+            return false;
+        }
+
+        $db = Database::getInstance();
+        return $db->execute(
+            "UPDATE users SET {$field} = :value, updated_at = NOW() WHERE id = :id AND deleted_at IS NULL",
+            [':value' => $value, ':id' => $id]
+        );
+    }
+
     public function toggleActive(int $id): int {
         return $this->db->execute(
             "UPDATE users SET is_active = NOT is_active, updated_at = NOW() WHERE id = ?",
@@ -131,6 +198,16 @@ class User {
         return $this->db->execute(
             "UPDATE users SET deleted_at = NOW() WHERE id = ?",
             [$id]
+        );
+    }
+
+    // ── Soft Delete (static) ──────────────────
+    public static function softDelete(int $id): bool
+    {
+        $db = Database::getInstance();
+        return $db->execute(
+            "UPDATE users SET deleted_at = NOW() WHERE id = :id AND deleted_at IS NULL",
+            [':id' => $id]
         );
     }
 
@@ -159,5 +236,64 @@ class User {
         ]);
         $user['name'] = implode(' ', $parts);
         return $user;
+    }
+
+    // ── PRIVATE HELPER: buildWhereClause ──────
+    private static function buildWhereClause(array $filters): array
+    {
+        $conditions = ['deleted_at IS NULL'];
+        $params     = [];
+
+        if (! empty($filters['search'])) {
+            // Search across actual columns — no virtual 'name' column
+            $conditions[] = "(first_name LIKE :search OR last_name LIKE :search OR email LIKE :search)";
+            $params[':search'] = '%' . $filters['search'] . '%';
+        }
+
+        if (! empty($filters['role'])) {
+            $conditions[] = "role = :role";
+            $params[':role'] = $filters['role'];
+        }
+
+        if (isset($filters['status'])) {
+            if ($filters['status'] === 'active') {
+                $conditions[] = "is_active = 1";
+            } elseif ($filters['status'] === 'inactive') {
+                $conditions[] = "is_active = 0";
+            }
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+        return [$where, $params];
+    }
+
+    // ── Email Verification ────────────────────────
+    public function setVerificationToken(int $id, string $token): void {
+        $this->db->execute(
+            "UPDATE users SET verification_token = ?, updated_at = NOW() WHERE id = ?",
+            [$token, $id]
+        );
+    }
+
+    public function findByVerificationToken(string $token): array|false {
+        return $this->db->queryOne(
+            "SELECT * FROM users WHERE verification_token = ? AND deleted_at IS NULL LIMIT 1",
+            [$token]
+        );
+    }
+
+    public function markEmailVerified(int $id): void {
+        $this->db->execute(
+            "UPDATE users SET email_verified_at = NOW(), verification_token = NULL, updated_at = NOW() WHERE id = ?",
+            [$id]
+        );
+    }
+
+    public function isEmailVerified(int $id): bool {
+        $row = $this->db->queryOne(
+            "SELECT email_verified_at FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1",
+            [$id]
+        );
+        return !empty($row['email_verified_at']);
     }
 }

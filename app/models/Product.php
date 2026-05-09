@@ -121,6 +121,18 @@ class Product {
         );
     }
 
+    // ── Find by ID (admin — includes inactive) ─
+    public function findByIdAdmin(int $id): array|false {
+        return $this->db->queryOne(
+            "SELECT p.*, c.name AS category_name
+             FROM products p
+             LEFT JOIN categories c ON p.category_id = c.id
+             WHERE p.id = ? AND p.deleted_at IS NULL
+             LIMIT 1",
+            [$id]
+        );
+    }
+
     // ── Find by slug ──────────────────────────
     public function findBySlug(string $slug): array|false {
         return $this->db->queryOne(
@@ -149,17 +161,88 @@ class Product {
         ) ?: ['min_price' => 0, 'max_price' => 9999];
     }
 
-    // ── Admin: get all including inactive ─────
-    public function adminGetAll(int $limit = 20, int $offset = 0): array {
+    // ── Admin: get all including inactive, with filters ──
+    public function adminGetAll(array $filters = [], int $limit = 20, int $offset = 0): array {
+        $where  = ["p.deleted_at IS NULL"];
+        $params = [];
+
+        if (!empty($filters['search'])) {
+            $where[]  = "(p.name LIKE ? OR p.description LIKE ?)";
+            $params[] = '%' . $filters['search'] . '%';
+            $params[] = '%' . $filters['search'] . '%';
+        }
+
+        if (!empty($filters['category_id'])) {
+            $where[]  = "p.category_id = ?";
+            $params[] = (int) $filters['category_id'];
+        }
+
+        if (isset($filters['is_active']) && $filters['is_active'] !== '') {
+            $where[]  = "p.is_active = ?";
+            $params[] = (int) $filters['is_active'];
+        }
+
+        $whereSQL = implode(' AND ', $where);
+        $params[] = $limit;
+        $params[] = $offset;
+
         return $this->db->query(
             "SELECT p.*, c.name AS category_name
              FROM products p
              LEFT JOIN categories c ON p.category_id = c.id
-             WHERE p.deleted_at IS NULL
+             WHERE {$whereSQL}
              ORDER BY p.created_at DESC
              LIMIT ? OFFSET ?",
-            [$limit, $offset]
+            $params
         );
+    }
+
+    // ── Admin: count with filters ─────────────
+    public function adminCountAll(array $filters = []): int {
+        $where  = ["p.deleted_at IS NULL"];
+        $params = [];
+
+        if (!empty($filters['search'])) {
+            $where[]  = "(p.name LIKE ? OR p.description LIKE ?)";
+            $params[] = '%' . $filters['search'] . '%';
+            $params[] = '%' . $filters['search'] . '%';
+        }
+
+        if (!empty($filters['category_id'])) {
+            $where[]  = "p.category_id = ?";
+            $params[] = (int) $filters['category_id'];
+        }
+
+        if (isset($filters['is_active']) && $filters['is_active'] !== '') {
+            $where[]  = "p.is_active = ?";
+            $params[] = (int) $filters['is_active'];
+        }
+
+        $whereSQL = implode(' AND ', $where);
+
+        $row = $this->db->queryOne(
+            "SELECT COUNT(*) as total
+             FROM products p
+             LEFT JOIN categories c ON p.category_id = c.id
+             WHERE {$whereSQL}",
+            $params
+        );
+
+        return (int) ($row['total'] ?? 0);
+    }
+
+    // ── Slug uniqueness check ─────────────────
+    public function slugExists(string $slug, ?int $excludeId = null): bool {
+        $sql    = "SELECT COUNT(*) as n FROM products WHERE slug = ? AND deleted_at IS NULL";
+        $params = [$slug];
+
+        if ($excludeId !== null) {
+            $sql    .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $row = $this->db->queryOne($sql, $params);
+        return (int) ($row['n'] ?? 0) > 0;
     }
 
     // ── Create ────────────────────────────────
@@ -171,12 +254,12 @@ class Product {
                 $data['category_id'],
                 $data['name'],
                 $data['slug'],
-                $data['description']    ?? null,
+                $data['description']     ?? null,
                 $data['price'],
-                $data['stock']          ?? 0,
+                $data['stock']           ?? 0,
                 $data['low_stock_alert'] ?? 5,
-                $data['image']          ?? null,
-                $data['is_active']      ?? 1,
+                $data['image']           ?? null,
+                $data['is_active']       ?? 1,
             ]
         );
     }
@@ -211,11 +294,26 @@ class Product {
         );
     }
 
-    // ── Update stock ──────────────────────────
+    // ── Update stock only ─────────────────────
     public function updateStock(int $id, int $quantity): int {
         return $this->db->execute(
             "UPDATE products SET stock = ?, updated_at = NOW() WHERE id = ?",
             [$quantity, $id]
+        );
+    }
+
+    // ── Get low stock products ────────────────
+    // Returns products where stock <= low_stock_alert threshold
+    public function getLowStock(): array {
+        return $this->db->query(
+            "SELECT p.*, c.name AS category_name
+             FROM products p
+             LEFT JOIN categories c ON p.category_id = c.id
+             WHERE p.deleted_at IS NULL
+               AND p.is_active = 1
+               AND p.stock <= p.low_stock_alert
+             ORDER BY p.stock ASC",
+            []
         );
     }
 }

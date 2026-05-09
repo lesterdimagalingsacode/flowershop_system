@@ -41,11 +41,11 @@ class App {
         // Content Security Policy
         $csp = implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
+            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://js.pusher.com",
             "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' data: blob:",
-            "connect-src 'self' https://api.paymongo.com",
+            "connect-src 'self' https://api.paymongo.com https://*.pusher.com wss://*.pusher.com",
             "frame-ancestors 'none'",
         ]);
         header("Content-Security-Policy: $csp");

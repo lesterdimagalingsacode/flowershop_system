@@ -22,13 +22,27 @@ class Session {
 
         session_name(SESSION_NAME);
 
+        // ── SameSite cookie strategy ──────────
+        // On HTTPS (ngrok, InfinityFree, production):
+        //   SameSite=None + Secure=true → session persists after PayMongo redirect
+        // On HTTP (plain localhost):
+        //   SameSite=Lax + Secure=false → normal behavior, no cross-site redirect
+        $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'
+                || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+                || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+
         session_set_cookie_params([
             'lifetime' => SESSION_LIFETIME,
             'path'     => '/',
             'domain'   => '',
-            'secure'   => isset($_SERVER['HTTPS']),  // HTTPS only in production
-            'httponly' => true,                       // no JS access to cookie
-            'samesite' => 'Strict',                  // CSRF protection layer
+            'secure'   => $isHttps,
+            'httponly' => true,
+            'samesite' => $isHttps ? 'None' : 'Lax',
+            // 'None'  → allows cookie after cross-site redirect (PayMongo → your site)
+            //           requires HTTPS — works on ngrok + InfinityFree
+            // 'Lax'   → fallback for plain HTTP localhost
+            //           session won't persist after PayMongo redirect on localhost
+            //           but works fine for everything else
         ]);
 
         session_start();
@@ -67,7 +81,6 @@ class Session {
     public static function flash(string $key, mixed $message, string $type = 'info'): void {
         $_SESSION['_flash'][$key] = ['message' => $message, 'type' => $type];
     }
-    
 
     public static function getFlash(string $key): ?array {
         if (!isset($_SESSION['_flash'][$key])) return null;

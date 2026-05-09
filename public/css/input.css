@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Inter';
-    src: url('/flowershop_system/public/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+    src: url('../fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
     font-family: 'Inter';
-    src: url('/flowershop_system/public/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+    src: url('../fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
     font-weight: 100 900;
     font-style: italic;
     font-display: swap;
@@ -16,7 +16,7 @@
 
 @font-face {
     font-family: 'MonteCarlo';
-    src: url('/flowershop_system/public/fonts/MonteCarlo-Regular.ttf') format('truetype');
+    src: url('../fonts/MonteCarlo-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;

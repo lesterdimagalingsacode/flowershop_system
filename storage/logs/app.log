@@ -252,3 +252,484 @@
 [2026-05-04 14:38:00] [INFO] [user:7] [::1] User logged out | {"user_id":7}
 [2026-05-04 14:39:05] [INFO] [user:2] [::1] User logged out | {"user_id":2}
 [2026-05-04 14:39:15] [INFO] [user:7] [::1] User logged in | {"user_id":7,"email":"marjune0605@gmail.com","role":"customer"}
+[2026-05-04 17:41:35] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-06 20:31:33] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-06 20:51:46] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-06 21:00:09] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 12:09:05] [ERROR] [guest] [::1] Uncaught TypeError: Router::get(): Argument #2 ($handler) must be of type callable|array, string given, called in C:\xampps\htdocs\flowershop_system\routes\routes.php on line 114 in C:\xampps\htdocs\flowershop_system\core\Router.php:19
+#0 C:\xampps\htdocs\flowershop_system\routes\routes.php(114): Router->get('/admin/users', 'AdminController...')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(61): App->{closure}(Object(Router))
+#2 C:\xampps\htdocs\flowershop_system\routes\routes.php(74): Router->group('/admin', Object(Closure))
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(57): require_once('C:\\xampps\\htdoc...')
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 12:09:05] [ERROR] [guest] [::1] Uncaught TypeError: Router::get(): Argument #2 ($handler) must be of type callable|array, string given, called in C:\xampps\htdocs\flowershop_system\routes\routes.php on line 114 in C:\xampps\htdocs\flowershop_system\core\Router.php:19
+#0 C:\xampps\htdocs\flowershop_system\routes\routes.php(114): Router->get('/admin/users', 'AdminController...')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(61): App->{closure}(Object(Router))
+#2 C:\xampps\htdocs\flowershop_system\routes\routes.php(74): Router->group('/admin', Object(Closure))
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(57): require_once('C:\\xampps\\htdoc...')
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 12:09:05] [ERROR] [guest] [::1] Uncaught TypeError: Router::get(): Argument #2 ($handler) must be of type callable|array, string given, called in C:\xampps\htdocs\flowershop_system\routes\routes.php on line 114 in C:\xampps\htdocs\flowershop_system\core\Router.php:19
+#0 C:\xampps\htdocs\flowershop_system\routes\routes.php(114): Router->get('/admin/users', 'AdminController...')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(61): App->{closure}(Object(Router))
+#2 C:\xampps\htdocs\flowershop_system\routes\routes.php(74): Router->group('/admin', Object(Closure))
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(57): require_once('C:\\xampps\\htdoc...')
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 12:10:18] [ERROR] [guest] [::1] Uncaught TypeError: Router::get(): Argument #2 ($handler) must be of type callable|array, string given, called in C:\xampps\htdocs\flowershop_system\routes\routes.php on line 114 in C:\xampps\htdocs\flowershop_system\core\Router.php:19
+#0 C:\xampps\htdocs\flowershop_system\routes\routes.php(114): Router->get('/admin/users', 'AdminController...')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(61): App->{closure}(Object(Router))
+#2 C:\xampps\htdocs\flowershop_system\routes\routes.php(74): Router->group('/admin', Object(Closure))
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(57): require_once('C:\\xampps\\htdoc...')
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 12:10:32] [ERROR] [guest] [::1] Uncaught TypeError: Router::get(): Argument #2 ($handler) must be of type callable|array, string given, called in C:\xampps\htdocs\flowershop_system\routes\routes.php on line 114 in C:\xampps\htdocs\flowershop_system\core\Router.php:19
+#0 C:\xampps\htdocs\flowershop_system\routes\routes.php(114): Router->get('/admin/users', 'AdminController...')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(61): App->{closure}(Object(Router))
+#2 C:\xampps\htdocs\flowershop_system\routes\routes.php(74): Router->group('/admin', Object(Closure))
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(57): require_once('C:\\xampps\\htdoc...')
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 12:12:45] [ERROR] [guest] [::1] Uncaught ParseError: syntax error, unexpected token "public", expecting end of file in C:\xampps\htdocs\flowershop_system\app\models\User.php:9
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): {closure}('User')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(177): AuthController->__construct()
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 12:19:01] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[07-May-2026 13:05:26 Europe/Berlin] PHP Fatal error:  Access level to DashboardController::json() must be protected (as in class Controller) or weaker in C:\xampps\htdocs\flowershop_system\app\controllers\DashboardController.php on line 163
+[2026-05-07 13:05:26] [ERROR] [user:1] [::1] Uncaught ErrorException: Access level to DashboardController::json() must be protected (as in class Controller) or weaker in C:\xampps\htdocs\flowershop_system\app\controllers\DashboardController.php:163
+#0 [internal function]: ErrorHandler::handleShutdown()
+#1 {main}
+[07-May-2026 13:06:55 Europe/Berlin] PHP Fatal error:  Declaration of DashboardController::json(array $payload): void must be compatible with Controller::json(mixed $data, int $status = 200): void in C:\xampps\htdocs\flowershop_system\app\controllers\DashboardController.php on line 163
+[2026-05-07 13:06:55] [ERROR] [user:1] [::1] Uncaught ErrorException: Declaration of DashboardController::json(array $payload): void must be compatible with Controller::json(mixed $data, int $status = 200): void in C:\xampps\htdocs\flowershop_system\app\controllers\DashboardController.php:163
+#0 [internal function]: ErrorHandler::handleShutdown()
+#1 {main}
+[2026-05-07 13:08:55] [ERROR] [user:1] [::1] PHP Error [2]: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php on line 543
+[2026-05-07 13:08:55] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php:543
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(543): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 543)
+#1 C:\xampps\htdocs\flowershop_system\public\index.php(19): require_once('C:\\xampps\\htdoc...')
+#2 [internal function]: {closure}('OrderController')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(166): is_callable(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 13:16:19] [ERROR] [user:1] [::1] PHP Error [2]: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php on line 543
+[2026-05-07 13:16:19] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php:543
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(543): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 543)
+#1 C:\xampps\htdocs\flowershop_system\public\index.php(19): require_once('C:\\xampps\\htdoc...')
+#2 [internal function]: {closure}('OrderController')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(166): is_callable(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 13:16:46] [ERROR] [user:1] [::1] Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'name' in 'field list' in C:\xampps\htdocs\flowershop_system\core\Database.php:121
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(121): PDO->prepare('\n            SE...')
+#1 C:\xampps\htdocs\flowershop_system\core\Database.php(58): Database->prepare('\n            SE...', Array)
+#2 C:\xampps\htdocs\flowershop_system\app\models\User.php(83): Database->query('\n            SE...', Array)
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\AdminController.php(24): User::getFiltered(Array, 1, 15)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AdminController->users(Array)
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#6 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#7 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#8 {main}
+[2026-05-07 13:24:52] [ERROR] [user:1] [::1] PHP Error [2]: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php on line 543
+[2026-05-07 13:24:52] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php:543
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(543): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 543)
+#1 C:\xampps\htdocs\flowershop_system\public\index.php(19): require_once('C:\\xampps\\htdoc...')
+#2 [internal function]: {closure}('OrderController')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(166): is_callable(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 13:27:21] [ERROR] [user:1] [::1] PHP Error [2]: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php on line 543
+[2026-05-07 13:27:21] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined variable $orderId in C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php:543
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(543): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 543)
+#1 C:\xampps\htdocs\flowershop_system\public\index.php(19): require_once('C:\\xampps\\htdoc...')
+#2 [internal function]: {closure}('OrderController')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(166): is_callable(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 13:27:43] [ERROR] [user:1] [::1] Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'name' in 'field list' in C:\xampps\htdocs\flowershop_system\core\Database.php:121
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(121): PDO->prepare('\n            SE...')
+#1 C:\xampps\htdocs\flowershop_system\core\Database.php(58): Database->prepare('\n            SE...', Array)
+#2 C:\xampps\htdocs\flowershop_system\app\models\User.php(83): Database->query('\n            SE...', Array)
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\AdminController.php(24): User::getFiltered(Array, 1, 15)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AdminController->users(Array)
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#6 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#7 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#8 {main}
+[2026-05-07 13:34:14] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/orders.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(443): Controller->view('admin/orders', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminIndex(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 13:35:00] [ERROR] [user:1] [::1] PHP Error [2]: Undefined array key "user_id" in C:\xampps\htdocs\flowershop_system\app\views\admin\users.php on line 107
+[2026-05-07 13:35:00] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined array key "user_id" in C:\xampps\htdocs\flowershop_system\app\views\admin\users.php:107
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\users.php(107): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 107)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AdminController.php(27): Controller->view('admin/users', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AdminController->users(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 13:35:27] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/orders.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(443): Controller->view('admin/orders', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminIndex(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 13:38:10] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 13:38:33] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-07 13:42:25] [INFO] [user:3] [::1] User logged out | {"user_id":3}
+[2026-05-07 13:42:32] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 13:42:35] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/orders.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(443): Controller->view('admin/orders', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminIndex(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 13:42:40] [ERROR] [user:1] [::1] PHP Error [2]: Undefined array key "user_id" in C:\xampps\htdocs\flowershop_system\app\views\admin\users.php on line 107
+[2026-05-07 13:42:40] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined array key "user_id" in C:\xampps\htdocs\flowershop_system\app\views\admin\users.php:107
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\users.php(107): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 107)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AdminController.php(27): Controller->view('admin/users', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AdminController->users(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 13:43:07] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 365 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(365): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 13:43:11] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 365 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(365): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 13:43:15] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/orders.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(443): Controller->view('admin/orders', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminIndex(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 13:43:21] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/orders.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(443): Controller->view('admin/orders', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminIndex(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:01:43] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/order-detail.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:02:08] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/order-detail.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:05:28] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/order-detail.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:10:06] [ERROR] [user:1] [::1] PHP Error [2]: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php on line 122
+[2026-05-07 14:10:06] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php:122
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php(122): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 122)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 14:22:40] [ERROR] [user:1] [::1] PHP Error [2]: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php on line 122
+[2026-05-07 14:22:40] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php:122
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php(122): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 122)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 14:23:07] [ERROR] [user:1] [::1] PHP Error [2]: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php on line 122
+[2026-05-07 14:23:07] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php:122
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php(122): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 122)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 14:23:28] [ERROR] [user:1] [::1] PHP Error [2]: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php on line 122
+[2026-05-07 14:23:28] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined array key "status" in C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php:122
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\order-detail.php(122): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 122)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(465): Controller->view('admin/order-det...', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->adminShow(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-07 14:38:11] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 14:38:17] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 14:42:00] [ERROR] [user:2] [::1] Uncaught Error: Call to undefined method Order::generateOrderNumber() in C:\xampps\htdocs\flowershop_system\app\models\Order.php:18
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(311): Order->create(Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->checkout(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:42:25] [ERROR] [user:2] [::1] Uncaught Error: Call to undefined method Order::generateOrderNumber() in C:\xampps\htdocs\flowershop_system\app\models\Order.php:18
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(311): Order->create(Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->checkout(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:42:32] [ERROR] [user:2] [::1] Uncaught Error: Call to undefined method Order::generateOrderNumber() in C:\xampps\htdocs\flowershop_system\app\models\Order.php:18
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(311): Order->create(Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->checkout(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-07 14:45:08] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-07 14:45:15] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 14:48:44] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 14:48:49] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 14:49:00] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-07 14:49:04] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 14:49:13] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-07 14:49:19] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 14:49:51] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 14:49:55] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 14:50:41] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-07 14:50:47] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 17:10:14] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 17:10:28] [ERROR] [user:1] [::1] PHP Error [2]: include(C:\xampps\htdocs\flowershop_system\app\views\admin/_products_table.php): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\views\admin\products.php on line 82
+[2026-05-07 17:10:28] [ERROR] [user:1] [::1] Uncaught ErrorException: include(C:\xampps\htdocs\flowershop_system\app\views\admin/_products_table.php): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\views\admin\products.php:82
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\products.php(82): ErrorHandler::handleError(2, 'include(C:\\xamp...', 'C:\\xampps\\htdoc...', 82)
+#1 C:\xampps\htdocs\flowershop_system\app\views\admin\products.php(82): include()
+#2 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(155): Controller->view('admin/products', Array, 'admin')
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->adminIndex(Array)
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#6 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#7 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#8 {main}
+[2026-05-07 17:12:37] [ERROR] [user:1] [::1] PHP Error [2]: include(C:\xampps\htdocs\flowershop_system\app\views\admin/_products_pagination.php): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\views\admin\products.php on line 88
+[2026-05-07 17:12:37] [ERROR] [user:1] [::1] Uncaught ErrorException: include(C:\xampps\htdocs\flowershop_system\app\views\admin/_products_pagination.php): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\views\admin\products.php:88
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\products.php(88): ErrorHandler::handleError(2, 'include(C:\\xamp...', 'C:\\xampps\\htdoc...', 88)
+#1 C:\xampps\htdocs\flowershop_system\app\views\admin\products.php(88): include()
+#2 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(155): Controller->view('admin/products', Array, 'admin')
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->adminIndex(Array)
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#6 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#7 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#8 {main}
+[2026-05-07 17:14:13] [ERROR] [user:1] [::1] PHP Error [2]: include(C:\xampps\htdocs\flowershop_system\app\views\admin/_products_table.php): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\views\admin\products.php on line 82
+[2026-05-07 17:14:13] [ERROR] [user:1] [::1] Uncaught ErrorException: include(C:\xampps\htdocs\flowershop_system\app\views\admin/_products_table.php): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\views\admin\products.php:82
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\products.php(82): ErrorHandler::handleError(2, 'include(C:\\xamp...', 'C:\\xampps\\htdoc...', 82)
+#1 C:\xampps\htdocs\flowershop_system\app\views\admin\products.php(82): include()
+#2 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(155): Controller->view('admin/products', Array, 'admin')
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->adminIndex(Array)
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#6 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#7 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#8 {main}
+[2026-05-07 17:43:39] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 17:43:43] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 17:43:49] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 17:43:54] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 17:45:07] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-07 17:45:11] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 17:45:45] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-07 17:45:58] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 17:49:46] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-07 17:49:59] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-07 19:21:27] [INFO] [user:8] [::1] New user registered | {"user_id":"8","email":"kimmyrut102@gmail.com"}
+[2026-05-07 19:55:44] [INFO] [user:8] [::1] User logged in | {"user_id":8,"email":"kimmyrut102@gmail.com","role":"customer"}
+[2026-05-07 19:58:19] [INFO] [guest] [::1] Email verified | {"user_id":8,"email":"kimmyrut102@gmail.com"}
+[2026-05-07 19:59:37] [INFO] [user:8] [::1] User logged out | {"user_id":8}
+[2026-05-07 19:59:48] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-07 20:01:25] [INFO] [guest] [::1] Email verified | {"user_id":2,"email":"kimlesterlumibao@gmail.com"}
+[2026-05-08 08:50:46] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-08 08:54:21] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-08 08:55:46] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-08 09:03:11] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-08 10:06:58] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-08 10:08:01] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-08 10:31:22] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-08 10:31:30] [INFO] [guest] [::1] User logged out | {"user_id":null}
+[2026-05-08 10:51:11] [INFO] [user:9] [::1] New user registered | {"user_id":"9","email":"airanoveno14@gmail.com"}
+[2026-05-08 10:53:38] [INFO] [user:9] [::1] User logged out | {"user_id":9}
+[2026-05-08 10:53:50] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-08 10:56:15] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 282 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(282): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->update(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 10:56:32] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 282 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(282): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->update(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 11:00:14] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-08 11:00:25] [INFO] [user:9] [::1] User logged in | {"user_id":9,"email":"airanoveno14@gmail.com","role":"customer"}
+[2026-05-08 21:41:00] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-08 21:41:30] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 282 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(282): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->update(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 21:48:02] [ERROR] [user:1] [::1] PHP Error [2]: move_uploaded_file(C:\xampps\htdocs\flowershop_system/public/images/products/product_69fe3df2c98ef9.52800772.jpg): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 451
+[2026-05-08 21:48:02] [ERROR] [user:1] [::1] Uncaught ErrorException: move_uploaded_file(C:\xampps\htdocs\flowershop_system/public/images/products/product_69fe3df2c98ef9.52800772.jpg): Failed to open stream: No such file or directory in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php:451
+#0 [internal function]: ErrorHandler::handleError(2, 'move_uploaded_f...', 'C:\\xampps\\htdoc...', 451)
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(451): move_uploaded_file('C:\\xampps\\tmp\\p...', 'C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(316): ProductController->handleImageUpload()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->update(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-08 22:01:11] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(103): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:01:31] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(103): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:25] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:26] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:27] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:28] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:36] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:45] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:51] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:24:57] [ERROR] [user:1] [::1] Uncaught ArgumentCountError: Too few arguments to function CSRFMiddleware::verify(), 0 passed in C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php on line 391 and exactly 1 expected in C:\xampps\htdocs\flowershop_system\middleware\CSRFMiddleware.php:58
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(391): CSRFMiddleware::verify()
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->updateStock(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-08 22:28:31] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/shop/show.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\ProductController.php(103): Controller->view('shop/show', Array, 'main')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(183): ProductController->show(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-09 12:26:32] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 13:48:21] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 14:07:20] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 14:09:35] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-09 14:10:12] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-09 15:26:03] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 15:56:50] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 15:57:20] [ERROR] [user:2] [::1] PayMongo debug — key: sk_test_XrDGkMKmB9JWRByc5qXDbrUy | order: PS-EF05F5-20260509 | method: online
+[2026-05-09 16:02:05] [ERROR] [guest] [::1] Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`flowershop`.`order_status_history`, CONSTRAINT `fk_osh_user` FOREIGN KEY (`changed_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE) in C:\xampps\htdocs\flowershop_system\core\Database.php:122
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(122): PDOStatement->execute(Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Database.php(74): Database->prepare('INSERT INTO ord...', Array)
+#2 C:\xampps\htdocs\flowershop_system\app\models\Order.php(130): Database->execute('INSERT INTO ord...', Array)
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php(234): Order->updateStatus(18, 'confirmed', 0, 'Payment confirm...')
+#4 C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php(145): PaymentController->verifyCheckoutSession('cs_04dcba8edc74...', 18, 'card')
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(183): PaymentController->success(Array)
+#6 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#7 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#8 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#9 {main}
+[2026-05-09 16:18:38] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 16:26:54] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 16:27:26] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-09 16:27:33] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
+[2026-05-09 17:27:05] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-09 20:59:32] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}

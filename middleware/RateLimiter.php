@@ -24,7 +24,18 @@ class RateLimiter {
 
         if ($this->isTooManyAttempts($ip, $email)) {
             $seconds = $this->availableIn($ip, $email);
-            $minutes = (int) ceil($seconds / 60);
+
+            // Build human-readable time string
+            if ($seconds <= 0) {
+                $timeMsg = 'a moment';
+            } elseif ($seconds < 60) {
+                $timeMsg = "{$seconds} second(s)";
+            } else {
+                $minutes = (int) ceil($seconds / 60);
+                $timeMsg = "{$minutes} minute(s)";
+            }
+
+            $message = "Too many login attempts. Please try again in {$timeMsg}.";
 
             // JSON response for AJAX
             if (
@@ -35,18 +46,14 @@ class RateLimiter {
                 header('Content-Type: application/json');
                 echo json_encode([
                     'success'     => false,
-                    'message'     => "Too many attempts. Please try again in {$minutes} minute(s).",
+                    'message'     => $message,
                     'retry_after' => $seconds,
                 ]);
                 exit;
             }
 
             // Normal redirect
-            Session::flash(
-                'message',
-                "Too many login attempts. Please try again in {$minutes} minute(s).",
-                'error'
-            );
+            Session::flash('message', $message, 'error');
             header('Location: ' . APP_URL . '/login');
             exit;
         }
@@ -80,9 +87,9 @@ class RateLimiter {
 
     // ── Check if blocked ─────────────────────
     public static function isTooManyAttempts(string $ip, string $email = ''): bool {
-        $db      = Database::getInstance();
-        $decay   = RATE_LIMIT_DECAY; // minutes
-        $max     = RATE_LIMIT_MAX;   // max attempts
+        $db    = Database::getInstance();
+        $decay = RATE_LIMIT_DECAY;
+        $max   = RATE_LIMIT_MAX;
 
         $row = $db->queryOne(
             "SELECT COUNT(*) as attempts
@@ -96,24 +103,24 @@ class RateLimiter {
     }
 
     // ── Seconds until block lifts ─────────────
+    // Entirely in SQL — no PHP time() vs MySQL NOW() mismatch
     public static function availableIn(string $ip, string $email = ''): int {
         $db    = Database::getInstance();
         $decay = RATE_LIMIT_DECAY;
 
-        // Find the oldest attempt in the current window
+        // Calculate remaining seconds fully in MySQL
+        // Uses the NEWEST attempt so the block resets from the last failed try
         $row = $db->queryOne(
-            "SELECT MIN(attempted_at) as oldest
+            "SELECT GREATEST(0, TIMESTAMPDIFF(SECOND, NOW(),
+                MAX(attempted_at) + INTERVAL ? MINUTE
+             )) AS seconds_left
              FROM login_attempts
              WHERE (ip_address = ? OR email = ?)
                AND attempted_at >= NOW() - INTERVAL ? MINUTE",
-            [$ip, $email, $decay]
+            [$decay, $ip, $email, $decay]
         );
 
-        if (empty($row['oldest'])) return 0;
-
-        $oldestTimestamp = strtotime($row['oldest']);
-        $unlocksAt       = $oldestTimestamp + ($decay * 60);
-        return max(0, $unlocksAt - time());
+        return (int)($row['seconds_left'] ?? 0);
     }
 
     // ── Remaining attempts ────────────────────
@@ -135,7 +142,6 @@ class RateLimiter {
     }
 
     // ── Auto-clean old attempts ───────────────
-    // Call this occasionally to keep the table clean
     public static function purgeOld(): void {
         $db    = Database::getInstance();
         $decay = RATE_LIMIT_DECAY;

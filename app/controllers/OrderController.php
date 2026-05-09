@@ -11,12 +11,14 @@ class OrderController extends Controller {
     private OrderItem $orderItemModel;
     private Product   $productModel;
     private Cart      $cartModel;
+    private PromoCode $promoModel;
 
     public function __construct() {
         $this->orderModel     = new Order();
         $this->orderItemModel = new OrderItem();
         $this->productModel   = new Product();
         $this->cartModel      = new Cart();
+        $this->promoModel     = new PromoCode();
     }
 
     // ══════════════════════════════════════════
@@ -79,6 +81,9 @@ class OrderController extends Controller {
 
         $cartCount = $this->cartModel->count($userId);
 
+        // ── Pusher: notify all devices of this user ──
+        PusherService::cartUpdated($userId, $cartCount);
+
         if ($isAsync) {
             $this->jsonSuccess(['cart_count' => $cartCount], $product['name'] . ' added to cart!');
             return;
@@ -112,17 +117,19 @@ class OrderController extends Controller {
             $this->cartModel->update($userId, $productId, min($quantity, $maxQty));
         }
 
-        // Reload cart after update
         $cart = $this->cartModel->getByUser($userId);
 
-        if ($isAsync) {
-            $subtotal  = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
-            $delivery  = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
-            $cartCount = $this->cartModel->count($userId);
-            $itemTotal = isset($cart[$productId])
-                ? $cart[$productId]['price'] * $cart[$productId]['quantity']
-                : 0;
+        $subtotal  = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
+        $delivery  = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
+        $cartCount = $this->cartModel->count($userId);
+        $itemTotal = isset($cart[$productId])
+            ? $cart[$productId]['price'] * $cart[$productId]['quantity']
+            : 0;
 
+        // ── Pusher: sync cart count across devices ──
+        PusherService::cartUpdated($userId, $cartCount);
+
+        if ($isAsync) {
             $this->jsonSuccess([
                 'cart_count' => $cartCount,
                 'item_total' => $itemTotal,
@@ -152,6 +159,9 @@ class OrderController extends Controller {
         $delivery  = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
         $cartCount = $this->cartModel->count($userId);
 
+        // ── Pusher: sync cart count across devices ──
+        PusherService::cartUpdated($userId, $cartCount);
+
         if ($isAsync) {
             $this->jsonSuccess([
                 'cart_count' => $cartCount,
@@ -169,7 +179,12 @@ class OrderController extends Controller {
     // ── POST /shop/cart/clear ─────────────────
     public function clearCart(): void {
         $this->requireAuth();
-        $this->cartModel->clear(Session::userId());
+        $userId = Session::userId();
+        $this->cartModel->clear($userId);
+
+        // ── Pusher: cart cleared ──
+        PusherService::cartUpdated($userId, 0);
+
         Session::flash('message', 'Cart cleared.', 'info');
         $this->redirect('/shop/cart');
     }
@@ -191,16 +206,18 @@ class OrderController extends Controller {
             return;
         }
 
-        $subtotal = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
-        $delivery = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
+        $subtotal    = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
+        $delivery    = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
+        $selectedIds = array_keys($cart);
 
         $this->view('shop/checkout', [
-            'title'    => 'Checkout',
-            'cart'     => $cart,
-            'subtotal' => $subtotal,
-            'delivery' => $delivery,
-            'total'    => $subtotal + $delivery,
-            'user'     => Session::user(),
+            'title'       => 'Checkout',
+            'cart'        => $cart,
+            'subtotal'    => $subtotal,
+            'delivery'    => $delivery,
+            'total'       => $subtotal + $delivery,
+            'user'        => Session::user(),
+            'selectedIds' => $selectedIds,
         ], 'main');
     }
 
@@ -211,27 +228,96 @@ class OrderController extends Controller {
         CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
             ?: $this->flashRedirect('/shop/checkout', 'Invalid request.', 'error');
 
-        $userId = Session::userId();
-        $cart   = $this->cartModel->getByUser($userId);
+        $userId   = Session::userId();
+        $fullCart = $this->cartModel->getByUser($userId);
 
-        if (empty($cart)) {
+        if (empty($fullCart)) {
             $this->flashRedirect('/shop/cart', 'Your cart is empty.', 'warning');
             return;
         }
 
-        $address = trim($this->post('delivery_address', ''));
-        if (empty($address)) {
-            Session::flash('message', 'Please enter a delivery address.', 'error');
-            $this->redirect('/shop/checkout');
+        $rawIds      = $this->post('selected_items', []);
+        $selectedIds = array_map('intval', is_array($rawIds) ? $rawIds : explode(',', (string)$rawIds));
+        $selectedIds = array_values(array_filter($selectedIds));
+
+        if (empty($selectedIds)) {
+            Session::flash('message', 'Please select at least one item to checkout.', 'warning');
+            $this->redirect('/shop/cart');
             return;
         }
 
-        $notes    = trim($this->post('notes', ''));
+        $selectedLookup = array_fill_keys($selectedIds, true);
+        $cart           = array_intersect_key($fullCart, $selectedLookup);
+
+        if (empty($cart)) {
+            Session::flash('message', 'Selected items are no longer in your cart.', 'warning');
+            $this->redirect('/shop/cart');
+            return;
+        }
+
         $subtotal = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
         $delivery = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
-        $total    = $subtotal + $delivery;
 
-        // Verify stock for all items
+        // ── Payment method ────────────────────
+        $paymentMethod = $this->post('payment_method', 'cod');
+        if (!in_array($paymentMethod, ['cod', 'online'])) {
+            $paymentMethod = 'cod';
+        }
+
+        // ── Promo code ────────────────────────
+        $promoCodeInput = trim($this->post('promo_code', ''));
+        $discountAmount = 0.00;
+        $appliedCode    = null;
+        $appliedPromo   = null;
+
+        if (!empty($promoCodeInput)) {
+            $promoResult = $this->promoModel->validate($promoCodeInput, $subtotal);
+
+            if ($promoResult['error']) {
+                $address = trim($this->post('delivery_address', ''));
+                Session::flash('message', $promoResult['error'], 'error');
+                $this->view('shop/checkout', [
+                    'title'           => 'Checkout',
+                    'cart'            => $cart,
+                    'subtotal'        => $subtotal,
+                    'delivery'        => $delivery,
+                    'total'           => $subtotal + $delivery,
+                    'user'            => Session::user(),
+                    'selectedIds'     => $selectedIds,
+                    'promo_code'      => $promoCodeInput,
+                    'discount_amount' => 0,
+                ], 'main');
+                return;
+            }
+
+            $discountAmount = (float)$promoResult['discount'];
+            $appliedCode    = strtoupper($promoCodeInput);
+            $appliedPromo   = $promoResult['promo'];
+        }
+
+        $total = max(0, $subtotal + $delivery - $discountAmount);
+
+        // ── Delivery address ──────────────────
+        $address = trim($this->post('delivery_address', ''));
+        if (empty($address)) {
+            Session::flash('message', 'Please enter a delivery address.', 'error');
+            $this->view('shop/checkout', [
+                'title'           => 'Checkout',
+                'cart'            => $cart,
+                'subtotal'        => $subtotal,
+                'delivery'        => $delivery,
+                'total'           => $total,
+                'user'            => Session::user(),
+                'selectedIds'     => $selectedIds,
+                'promo_code'      => $promoCodeInput,
+                'discount_amount' => $discountAmount,
+            ], 'main');
+            return;
+        }
+
+        $notes = trim($this->post('notes', ''));
+
+        // ── Stock verification ────────────────
         foreach ($cart as $item) {
             $product = $this->productModel->findById($item['product_id']);
             if (!$product || $product['stock'] < $item['quantity']) {
@@ -241,14 +327,17 @@ class OrderController extends Controller {
             }
         }
 
-        // Create order
+        // ── Create order ──────────────────────
         $orderId = $this->orderModel->create([
             'user_id'          => $userId,
             'subtotal'         => $subtotal,
             'delivery_fee'     => $delivery,
+            'discount_amount'  => $discountAmount,
             'total_amount'     => $total,
             'delivery_address' => $address,
             'notes'            => $notes,
+            'promo_code'       => $appliedCode,
+            'payment_method'   => $paymentMethod,  // ← new
         ]);
 
         if (!$orderId) {
@@ -256,7 +345,7 @@ class OrderController extends Controller {
             return;
         }
 
-        // Create order items & deduct stock
+        // ── Order items & stock deduction ─────
         $this->orderItemModel->createMany((int)$orderId, array_values($cart));
 
         foreach ($cart as $item) {
@@ -265,18 +354,49 @@ class OrderController extends Controller {
             $this->productModel->updateStock($item['product_id'], $newStock);
         }
 
-        // Log initial status
+        // ── Increment promo usage ─────────────
+        if ($appliedPromo) {
+            $this->promoModel->incrementUses((int)$appliedPromo['id']);
+        }
+
+        // ── Log initial status ────────────────
         $this->orderModel->updateStatus(
             (int)$orderId,
             'pending',
             $userId,
-            'Order placed by customer'
+            'Order placed by customer' . ($appliedCode ? " (promo: {$appliedCode})" : '')
         );
 
-        // Clear DB cart
-        $this->cartModel->clear($userId);
+        // ── Remove checked-out items from cart ─
+        foreach ($selectedIds as $productId) {
+            $this->cartModel->remove($userId, $productId);
+        }
+
+        // ── Pusher: update cart count (now lower) ──
+        $newCartCount = $this->cartModel->count($userId);
+        PusherService::cartUpdated($userId, $newCartCount);
 
         $order = $this->orderModel->findById((int)$orderId);
+
+        // ── Online payment → redirect to PayMongo ──
+        if ($paymentMethod === 'online') {
+            $checkoutUrl = PaymentController::createCheckoutSession($order, array_values($cart));
+
+            if ($checkoutUrl) {
+                // Don't notify admin yet — wait for payment confirmation in PaymentController::success()
+                header('Location: ' . $checkoutUrl);
+                exit;
+            }
+
+            // PayMongo session creation failed — fall back to COD flow with error
+            Session::flash('message', 'Could not connect to payment gateway. Please try again or choose Cash on Delivery.', 'error');
+            $this->redirect('/orders/' . $orderId);
+            return;
+        }
+
+        // ── COD flow ──────────────────────────
+        // Notify admin of new order
+        PusherService::newOrder($order);
 
         Session::flash('message', 'Order placed successfully! Your order number is ' . $order['order_number'] . '.', 'success');
         $this->redirect('/orders/' . $orderId);
@@ -405,16 +525,37 @@ class OrderController extends Controller {
         $newStatus = $this->post('status', '');
         $notes     = $this->post('notes', '');
 
-        $validStatuses = ['pending', 'confirmed', 'processing', 'ready', 'delivered', 'cancelled'];
-        if (!in_array($newStatus, $validStatuses)) {
-            $this->jsonError('Invalid status.');
+        $order = $this->orderModel->findById($orderId);
+        if (!$order) {
+            $this->jsonError('Order not found.');
+            return;
+        }
+
+        // Define allowed next steps for each status
+        $transitions = [
+            'pending'    => ['confirmed', 'cancelled'],
+            'confirmed'  => ['processing', 'cancelled'],
+            'processing' => ['ready', 'cancelled'],
+            'ready'      => ['delivered'],
+            'delivered'  => [],
+            'cancelled'  => [],
+        ];
+
+        $current = $order['status'];
+        $allowed = $transitions[$current] ?? [];
+
+        if (!in_array($newStatus, $allowed)) {
+            $this->jsonError("Cannot move from '{$current}' to '{$newStatus}'.");
             return;
         }
 
         $success = $this->orderModel->updateStatus($orderId, $newStatus, Session::userId(), $notes);
 
         if ($success) {
-            $this->jsonSuccess(null, 'Order status updated.');
+            // ── Pusher: notify customer + admin of status change ──
+            PusherService::orderStatusChanged($order, $newStatus);
+
+            $this->jsonSuccess(['new_status' => $newStatus], 'Order status updated.');
         } else {
             $this->jsonError('Failed to update order status.');
         }

@@ -189,13 +189,31 @@ $errors  = $errors  ?? [];
                     <?php if (!empty($errors['password'])): ?>
                         <p class="mt-1 text-xs text-red-500"><?= e($errors['password'][0]) ?></p>
                     <?php endif; ?>
+
                     <!-- Strength bars -->
-                    <div class="flex gap-1 mt-2">
+                    <div class="flex gap-1 mt-2" id="strengthBars">
                         <div class="h-1 flex-1 rounded-full bg-border" id="bar1"></div>
                         <div class="h-1 flex-1 rounded-full bg-border" id="bar2"></div>
                         <div class="h-1 flex-1 rounded-full bg-border" id="bar3"></div>
                         <div class="h-1 flex-1 rounded-full bg-border" id="bar4"></div>
                     </div>
+                    <p id="strengthLabel" class="text-xs mt-1 hidden"></p>
+
+                    <!-- Requirements checklist -->
+                    <ul id="pwChecklist" class="mt-2 space-y-1 hidden">
+                        <li id="req-length"  class="flex items-center gap-2 text-xs text-muted">
+                            <span class="req-icon w-3 text-center">○</span> At least 8 characters
+                        </li>
+                        <li id="req-upper"   class="flex items-center gap-2 text-xs text-muted">
+                            <span class="req-icon w-3 text-center">○</span> One uppercase letter (A–Z)
+                        </li>
+                        <li id="req-number"  class="flex items-center gap-2 text-xs text-muted">
+                            <span class="req-icon w-3 text-center">○</span> One number (0–9)
+                        </li>
+                        <li id="req-special" class="flex items-center gap-2 text-xs text-muted">
+                            <span class="req-icon w-3 text-center">○</span> One special character (!@#$…)
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Confirm Password -->
@@ -274,21 +292,62 @@ function togglePassword(fieldId, btn) {
     btn.setAttribute('aria-label', input.type === 'password' ? 'Show password' : 'Hide password');
 }
 
-// Password strength
+// Password strength + checklist
 document.getElementById('password').addEventListener('input', function () {
-    const val    = this.value;
-    const bars   = [bar1, bar2, bar3, bar4];
-    const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
-    let strength = 0;
+    const val      = this.value;
+    const bars     = [bar1, bar2, bar3, bar4];
+    const colors   = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
+    const labels   = ['Weak', 'Fair', 'Good', 'Strong'];
+    const labelColors = ['#f87171', '#fb923c', '#facc15', '#22c55e'];
 
-    if (val.length >= 8)           strength++;
-    if (/[A-Z]/.test(val))         strength++;
-    if (/[0-9]/.test(val))         strength++;
-    if (/[^A-Za-z0-9]/.test(val))  strength++;
+    const checks = {
+        length:  val.length >= 8,
+        upper:   /[A-Z]/.test(val),
+        number:  /[0-9]/.test(val),
+        special: /[^A-Za-z0-9]/.test(val),
+    };
 
+    const strength = Object.values(checks).filter(Boolean).length;
+
+    // Update bars
     bars.forEach((bar, i) => {
         bar.className = 'h-1 flex-1 rounded-full ' +
             (i < strength ? colors[strength - 1] : 'bg-border');
+    });
+
+    // Update strength label
+    const label = document.getElementById('strengthLabel');
+    if (val.length > 0) {
+        label.style.color = labelColors[strength - 1] ?? '#9ca3af';
+        label.textContent  = (labels[strength - 1] ?? 'Weak') + ' password';
+        label.classList.remove('hidden');
+    } else {
+        label.classList.add('hidden');
+    }
+
+    // Show/hide checklist
+    const checklist = document.getElementById('pwChecklist');
+    checklist.classList.toggle('hidden', val.length === 0);
+
+    // Update each requirement row
+    const reqMap = {
+        'req-length':  checks.length,
+        'req-upper':   checks.upper,
+        'req-number':  checks.number,
+        'req-special': checks.special,
+    };
+
+    Object.entries(reqMap).forEach(([id, passed]) => {
+        const li   = document.getElementById(id);
+        const icon = li.querySelector('.req-icon');
+        if (passed) {
+            li.style.color = '#16a34a';   // green-600
+            icon.textContent = '✓';
+        } else {
+            li.style.color = '';
+            li.classList.add('text-muted');
+            icon.textContent = '○';
+        }
     });
 });
 

@@ -12,14 +12,16 @@ const Toast = (() => {
             container.id = 'toast-container';
             container.style.cssText = `
                 position: fixed;
-                bottom: 1.5rem;
-                right: 1.5rem;
+                bottom: 1.25rem;
+                left: 50%;
+                transform: translateX(-50%);
                 z-index: 9999;
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
+                width: calc(100% - 2rem);
                 max-width: 360px;
-                width: 100%;
+                pointer-events: none;
             `;
             document.body.appendChild(container);
         }
@@ -76,6 +78,10 @@ const Toast = (() => {
             transform: translateY(8px);
             transition: opacity 0.25s ease, transform 0.25s ease;
             cursor: pointer;
+            pointer-events: auto;
+            width: 100%;
+            box-sizing: border-box;
+            word-break: break-word;
         `;
 
         toast.innerHTML = `
@@ -119,12 +125,12 @@ const Toast = (() => {
         });
 
         // Auto dismiss
-        const timer = setTimeout(() => dismiss(toast), duration);
+        let timer = setTimeout(() => dismiss(toast), duration);
 
         // Cancel auto dismiss on hover
         toast.addEventListener('mouseenter', () => clearTimeout(timer));
         toast.addEventListener('mouseleave', () => {
-            setTimeout(() => dismiss(toast), 1500);
+            timer = setTimeout(() => dismiss(toast), 1500);
         });
 
         return toast;
@@ -149,7 +155,6 @@ const Toast = (() => {
 })();
 
 // ── Auto-show flash messages as toasts ────────
-// If PHP flash messages exist in the DOM, convert them to toasts
 document.addEventListener('DOMContentLoaded', () => {
     const flashContainer = document.getElementById('flash-container');
     if (!flashContainer) return;
@@ -158,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = el.querySelector('span:nth-child(2)')?.textContent?.trim();
         if (!text) return;
 
-        // Detect type from class
         let type = 'info';
         if (el.classList.contains('bg-green-50'))  type = 'success';
         if (el.classList.contains('bg-red-50'))    type = 'error';
@@ -168,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
         el.remove();
     });
 
-    // Hide the flash container if empty
     if (!flashContainer.children.length) {
         flashContainer.remove();
     }
