@@ -30,7 +30,7 @@
         <!-- Logo -->
         <div class="px-6 py-5 border-b border-border">
             <a href="<?= APP_URL ?>/" class="flex items-center gap-2 no-underline">
-                <span class="text-lg">🌿</span>
+                <span class="text-lg"></span>
                 <div>
                     <div class="text-sm font-bold text-forest tracking-wide" style="font-family: var(--font-display);">Petal & Soul</div>
                     <div class="text-[0.6rem] text-muted uppercase tracking-widest">Admin Panel</div>
@@ -82,11 +82,18 @@
 
             <p class="text-[0.6rem] uppercase tracking-widest text-muted px-3 mb-2 mt-4">Admin</p>
             <a href="<?= APP_URL ?>/admin/users"
-               class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:bg-cream hover:text-forest transition-all mb-1 <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/users') ? 'active' : '' ?>">
-                <svg class="sidebar-icon w-4 h-4 text-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
+                class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:bg-cream hover:text-forest transition-all mb-1 <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/users') ? 'active' : '' ?>">
+                    <svg class="sidebar-icon w-4 h-4 text-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
                 Users
+            </a>
+            <a href="<?= APP_URL ?>/admin/backup"
+            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:bg-cream hover:text-forest transition-all mb-1 <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/backup') ? 'active' : '' ?>">
+                <svg class="sidebar-icon w-4 h-4 text-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Backup & Restore
             </a>
         </nav>
 

@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Toast.show(text, type);
         el.remove();
-    });
+    }); 
 
     if (!flashContainer.children.length) {
         flashContainer.remove();

@@ -733,3 +733,132 @@
 [2026-05-09 16:27:33] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"admin@flowershop.com","role":"admin"}
 [2026-05-09 17:27:05] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
 [2026-05-09 20:59:32] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 09:36:46] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:36
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(43): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(177): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-10 09:37:00] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:36
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(43): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(177): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-10 09:37:07] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:36
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(43): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(177): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-10 09:41:40] [INFO] [user:10] [::1] New user registered | {"user_id":"10","email":"lumibaokimlester@gmail.com"}
+[2026-05-10 09:46:13] [INFO] [guest] [::1] Email verified | {"user_id":10,"email":"lumibaokimlester@gmail.com"}
+[2026-05-10 09:50:51] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-10 10:07:01] [INFO] [user:10] [::1] User logged out | {"user_id":10}
+[2026-05-10 10:40:43] [INFO] [user:10] [::1] User logged in | {"user_id":10,"email":"lumibaokimlester@gmail.com","role":"customer"}
+[2026-05-10 12:58:50] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-10 12:58:56] [INFO] [guest] [::1] User logged out | {"user_id":null}
+[2026-05-10 12:59:42] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 12:59:57] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-10 13:00:17] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 14:13:02] [ERROR] [user:2] [::1] Uncaught Error: Undefined constant "BASE_URL" in C:\xampps\htdocs\flowershop_system\app\views\auth\profile.php:210
+#0 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require()
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(229): Controller->view('auth/profile', Array, 'main')
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->profileForm(Array)
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#4 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#5 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#6 {main}
+[2026-05-10 14:13:12] [ERROR] [user:2] [::1] Uncaught Error: Undefined constant "BASE_URL" in C:\xampps\htdocs\flowershop_system\app\views\auth\profile.php:210
+#0 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require()
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(229): Controller->view('auth/profile', Array, 'main')
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(183): AuthController->profileForm(Array)
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#4 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#5 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#6 {main}
+[2026-05-10 14:19:57] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-10 14:20:27] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 14:20:40] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-10 14:20:51] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 14:44:07] [INFO] [guest] [::1] Email verified | {"user_id":9,"email":"airanoveno14@gmail.com"}
+[2026-05-10 14:47:29] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[2026-05-10 14:49:18] [INFO] [user:3] [::1] User logged out | {"user_id":3}
+[2026-05-10 14:49:35] [INFO] [user:3] [::1] User logged in | {"user_id":3,"email":"ace@gmail.com","role":"customer"}
+[10-May-2026 14:51:10 Europe/Berlin] [Mailer] PHPMailer error: SMTP Error: Could not connect to SMTP host. Failed to connect to server
+[2026-05-10 14:53:42] [INFO] [user:11] [::1] New user registered | {"user_id":"11","email":"jamvillar28@gmail.com"}
+[2026-05-10 20:27:59] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-10 20:30:11] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 20:38:29] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-10 21:28:44] [ERROR] [user:2] [::1] PHP Error [2]: Undefined array key "price" in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php on line 25
+[2026-05-10 21:28:44] [ERROR] [user:2] [::1] Uncaught ErrorException: Undefined array key "price" in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php:25
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php(25): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 25)
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php(311): PaymentController::createCheckoutSession(Array, Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(183): PaymentController->retry(Array)
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#4 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#5 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#6 {main}
+[2026-05-10 22:02:44] [ERROR] [user:2] [::1] PHP Error [2]: Undefined array key "unit_price" in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php on line 25
+[2026-05-10 22:02:44] [ERROR] [user:2] [::1] Uncaught ErrorException: Undefined array key "unit_price" in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php:25
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php(25): ErrorHandler::handleError(2, 'Undefined array...', 'C:\\xampps\\htdoc...', 25)
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(366): PaymentController::createCheckoutSession(Array, Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->checkout(Array)
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#4 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#5 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#6 {main}
+[2026-05-10 22:06:02] [ERROR] [user:2] [::1] PHP Error [2]: Undefined variable $baseUrl in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php on line 76
+[2026-05-10 22:06:02] [ERROR] [user:2] [::1] Uncaught ErrorException: Undefined variable $baseUrl in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php:76
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php(76): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 76)
+#1 C:\xampps\htdocs\flowershop_system\app\controllers\OrderController.php(366): PaymentController::createCheckoutSession(Array, Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(183): OrderController->checkout(Array)
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#4 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#5 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#6 {main}
+[2026-05-11 08:49:46] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[11-May-2026 08:51:27 Europe/Berlin] PHP Fatal error:  Cannot declare class OrderController, because the name is already in use in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php on line 8
+[2026-05-11 08:51:27] [ERROR] [user:2] [::1] Uncaught ErrorException: Cannot declare class OrderController, because the name is already in use in C:\xampps\htdocs\flowershop_system\app\controllers\PaymentController.php:8
+#0 [internal function]: ErrorHandler::handleShutdown()
+#1 {main}
+[2026-05-11 08:54:14] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:02:13] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:03:21] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:10:59] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:13:51] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:19:33] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:29:13] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:36:09] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:38:25] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:43:21] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 09:57:30] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 10:11:53] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 10:52:22] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 10:53:19] [ERROR] [user:2] [::1] PayMongo createPaymentIntent failed: {"errors":[{"code":"parameter_required","detail":"payment_method_allowed is required.","source":{"pointer":"payment_method_allowed","attribute":"payment_method_allowed"}}]}
+[2026-05-11 11:49:44] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-11 11:51:42] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-11 11:52:15] [INFO] [user:12] [::1] New user registered | {"user_id":"12","email":"rhoandeguzman1@gmail.com"}
+[2026-05-11 14:03:28] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-11 14:03:35] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-11 14:45:44] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-11 15:03:49] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-11 15:03:56] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-11 15:29:12] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-11 15:30:00] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-11 20:24:12] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-11 20:34:00] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-11 20:34:58] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-11 20:35:07] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-11 20:36:43] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-11 20:46:39] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-11 20:46:55] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}

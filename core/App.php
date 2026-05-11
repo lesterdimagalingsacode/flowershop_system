@@ -45,7 +45,7 @@ class App {
             "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' data: blob:",
-            "connect-src 'self' https://api.paymongo.com https://*.pusher.com wss://*.pusher.com",
+            "connect-src 'self' https://api.paymongo.com https://*.pusher.com wss://*.pusher.com https://cdn.jsdelivr.net",
             "frame-ancestors 'none'",
         ]);
         header("Content-Security-Policy: $csp");

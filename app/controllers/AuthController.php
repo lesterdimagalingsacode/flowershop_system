@@ -215,4 +215,97 @@ class AuthController extends Controller {
         Session::logout();
         $this->flashRedirect('/login', 'You have been logged out.', 'info');
     }
+
+    // ── GET /profile ──────────────────────────
+    public function profileForm(): void {
+        $this->requireAuth();
+
+        $user = $this->userModel->findById(Session::userId());
+        if (!$user) {
+            $this->flashRedirect('/login', 'Session expired. Please log in again.', 'error');
+            return;
+        }
+
+        $this->view('auth/profile', [
+            'user'    => $user,
+            'errors'  => json_decode(Session::getFlash('errors')['message'] ?? '[]', true) ?? [],
+            'oldData' => json_decode(Session::getFlash('old')['message']    ?? '[]', true) ?? [],
+        ], 'main');
+    }
+
+    // ── POST /profile ─────────────────────────
+    public function updateProfile(): void {
+        $this->requireAuth();
+
+        CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
+            ?: $this->flashRedirect('/profile', 'Invalid request. Please try again.', 'error');
+
+        $validator = Validator::make($_POST, [
+            'first_name'  => 'required|min:2|max:50',
+            'middle_name' => 'max:50',
+            'last_name'   => 'required|min:2|max:50',
+            'phone'       => 'max:20',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('errors', json_encode($validator->errors()));
+            Session::flash('old',    json_encode($_POST));
+            $this->redirect('/profile');
+            return;
+        }
+
+        $userId = Session::userId();
+
+        $this->userModel->update($userId, [
+            'first_name'  => $validator->get('first_name'),
+            'middle_name' => $this->post('middle_name') ?: null,
+            'last_name'   => $validator->get('last_name'),
+            'phone'       => $validator->get('phone') ?: null,
+            'address'     => $this->post('address')   ?: null,
+        ]);
+
+        // Refresh session with updated name
+        $updated = $this->userModel->findById($userId);
+        Session::login($updated);
+
+        $this->flashRedirect('/profile', 'Profile updated successfully! ✅');
+    }
+
+    // ── POST /profile/password ────────────────
+    public function updatePassword(): void {
+        $this->requireAuth();
+
+        CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
+            ?: $this->flashRedirect('/profile', 'Invalid request. Please try again.', 'error');
+
+        $userId = Session::userId();
+        $user   = $this->userModel->findById($userId);
+
+        // Verify current password
+        if (!password_verify($this->post('current_password', ''), $user['password'])) {
+            Session::flash('errors', json_encode(['current_password' => ['Current password is incorrect.']]));
+            $this->redirect('/profile');
+            return;
+        }
+
+        $validator = Validator::make($_POST, [
+            'new_password' => 'required|strong_password|max:255',
+        ]);
+
+        if ($this->post('new_password') !== $this->post('new_password_confirmation')) {
+            Session::flash('errors', json_encode(['new_password' => ['Passwords do not match.']]));
+            $this->redirect('/profile');
+            return;
+        }
+
+        if ($validator->fails()) {
+            Session::flash('errors', json_encode($validator->errors()));
+            $this->redirect('/profile');
+            return;
+        }
+
+        $this->userModel->updatePassword($userId, $this->post('new_password'));
+
+        $this->flashRedirect('/profile', 'Password changed successfully! 🔒');
+    }
 }

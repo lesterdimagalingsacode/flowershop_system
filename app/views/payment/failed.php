@@ -60,10 +60,10 @@ $isCancelled = $cancelled ?? false;
         <!-- Actions -->
         <div class="flex flex-col gap-3">
             <?php if ($order): ?>
-            <a href="<?= APP_URL ?>/orders/<?= (int)$order['id'] ?>"
-               class="w-full bg-forest hover:bg-pine text-white font-medium text-sm px-6 py-3.5 rounded-full transition-all hover:-translate-y-px shadow-sm text-center">
+            <button onclick="RetryModal.open()"
+                class="w-full bg-forest hover:bg-pine text-white font-medium text-sm px-6 py-3.5 rounded-full transition-all hover:-translate-y-px shadow-sm text-center">
                 Retry Payment
-            </a>
+            </button>
             <?php endif; ?>
             <a href="<?= APP_URL ?>/shop"
                class="w-full bg-white border border-border hover:border-forest text-text font-medium text-sm px-6 py-3.5 rounded-full transition text-center">
@@ -74,6 +74,16 @@ $isCancelled = $cancelled ?? false;
         <p class="text-xs text-muted mt-6">
             Need help? <a href="<?= APP_URL ?>/contact" class="text-forest hover:underline">Contact us</a>
         </p>
+
+        <!-- ADD THIS -->
+        <?php if ($order): ?>
+        <?php
+          $retryOrderId     = $order['id'];
+          $retryOrderNumber = $order['order_number'];
+          $retryTotal       = $order['total_amount'];
+          include __DIR__ . '/../partials/retry_payment_modal.php';
+        ?>
+        <?php endif; ?>
 
     </div>
 </div>

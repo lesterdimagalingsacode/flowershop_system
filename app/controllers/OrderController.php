@@ -25,7 +25,6 @@ class OrderController extends Controller {
     //  CART
     // ══════════════════════════════════════════
 
-    // ── GET /shop/cart ────────────────────────
     public function cart(): void {
         $this->requireAuth();
 
@@ -43,7 +42,6 @@ class OrderController extends Controller {
         ], 'main');
     }
 
-    // ── POST /shop/cart/add ───────────────────
     public function addToCart(): void {
         $this->requireAuth();
 
@@ -78,10 +76,8 @@ class OrderController extends Controller {
         }
 
         $this->cartModel->addOrUpdate($userId, $productId, $quantity);
-
         $cartCount = $this->cartModel->count($userId);
 
-        // ── Pusher: notify all devices of this user ──
         PusherService::cartUpdated($userId, $cartCount);
 
         if ($isAsync) {
@@ -93,7 +89,6 @@ class OrderController extends Controller {
         $this->redirectBack();
     }
 
-    // ── POST /shop/cart/update ────────────────
     public function updateCart(): void {
         $this->requireAuth();
 
@@ -117,8 +112,7 @@ class OrderController extends Controller {
             $this->cartModel->update($userId, $productId, min($quantity, $maxQty));
         }
 
-        $cart = $this->cartModel->getByUser($userId);
-
+        $cart      = $this->cartModel->getByUser($userId);
         $subtotal  = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
         $delivery  = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
         $cartCount = $this->cartModel->count($userId);
@@ -126,7 +120,6 @@ class OrderController extends Controller {
             ? $cart[$productId]['price'] * $cart[$productId]['quantity']
             : 0;
 
-        // ── Pusher: sync cart count across devices ──
         PusherService::cartUpdated($userId, $cartCount);
 
         if ($isAsync) {
@@ -144,7 +137,6 @@ class OrderController extends Controller {
         $this->redirectBack();
     }
 
-    // ── POST /shop/cart/remove ────────────────
     public function removeFromCart(): void {
         $this->requireAuth();
 
@@ -159,7 +151,6 @@ class OrderController extends Controller {
         $delivery  = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
         $cartCount = $this->cartModel->count($userId);
 
-        // ── Pusher: sync cart count across devices ──
         PusherService::cartUpdated($userId, $cartCount);
 
         if ($isAsync) {
@@ -176,15 +167,11 @@ class OrderController extends Controller {
         $this->redirectBack();
     }
 
-    // ── POST /shop/cart/clear ─────────────────
     public function clearCart(): void {
         $this->requireAuth();
         $userId = Session::userId();
         $this->cartModel->clear($userId);
-
-        // ── Pusher: cart cleared ──
         PusherService::cartUpdated($userId, 0);
-
         Session::flash('message', 'Cart cleared.', 'info');
         $this->redirect('/shop/cart');
     }
@@ -193,7 +180,6 @@ class OrderController extends Controller {
     //  CHECKOUT
     // ══════════════════════════════════════════
 
-    // ── GET /shop/checkout ────────────────────
     public function checkoutForm(): void {
         $this->requireAuth();
 
@@ -221,7 +207,6 @@ class OrderController extends Controller {
         ], 'main');
     }
 
-    // ── POST /shop/checkout ───────────────────
     public function checkout(): void {
         $this->requireAuth();
 
@@ -258,7 +243,6 @@ class OrderController extends Controller {
         $subtotal = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cart));
         $delivery = defined('DELIVERY_FEE') ? DELIVERY_FEE : 0.00;
 
-        // ── Payment method ────────────────────
         $paymentMethod = $this->post('payment_method', 'cod');
         if (!in_array($paymentMethod, ['cod', 'online'])) {
             $paymentMethod = 'cod';
@@ -274,7 +258,6 @@ class OrderController extends Controller {
             $promoResult = $this->promoModel->validate($promoCodeInput, $subtotal);
 
             if ($promoResult['error']) {
-                $address = trim($this->post('delivery_address', ''));
                 Session::flash('message', $promoResult['error'], 'error');
                 $this->view('shop/checkout', [
                     'title'           => 'Checkout',
@@ -337,7 +320,7 @@ class OrderController extends Controller {
             'delivery_address' => $address,
             'notes'            => $notes,
             'promo_code'       => $appliedCode,
-            'payment_method'   => $paymentMethod,  // ← new
+            'payment_method'   => $paymentMethod,
         ]);
 
         if (!$orderId) {
@@ -372,31 +355,56 @@ class OrderController extends Controller {
             $this->cartModel->remove($userId, $productId);
         }
 
-        // ── Pusher: update cart count (now lower) ──
         $newCartCount = $this->cartModel->count($userId);
         PusherService::cartUpdated($userId, $newCartCount);
 
         $order = $this->orderModel->findById((int)$orderId);
+        $items = $this->orderItemModel->getByOrder((int)$orderId);
 
-        // ── Online payment → redirect to PayMongo ──
+        // ── Online payment → Payment Intent flow ──
         if ($paymentMethod === 'online') {
-            $checkoutUrl = PaymentController::createCheckoutSession($order, array_values($cart));
+            $paymentMethodId = trim($this->post('payment_method_id', ''));
 
-            if ($checkoutUrl) {
-                // Don't notify admin yet — wait for payment confirmation in PaymentController::success()
-                header('Location: ' . $checkoutUrl);
+            if (!$paymentMethodId) {
+                Session::flash('message', 'Payment method missing. Please enter your card details.', 'error');
+                $this->redirect('/orders/' . $orderId);
+                return;
+            }
+
+            $result = PaymentController::createAndAttachPaymentIntent($order, array_values($cart), $paymentMethodId);
+
+            if (!$result) {
+                Session::flash('message', 'Could not process payment. Please try again.', 'error');
+                $this->redirect('/orders/' . $orderId);
+                return;
+            }
+
+            // ── 3DS required → redirect to bank auth page ──
+            if (isset($result['redirect_url'])) {
+                header('Location: ' . $result['redirect_url']);
                 exit;
             }
 
-            // PayMongo session creation failed — fall back to COD flow with error
-            Session::flash('message', 'Could not connect to payment gateway. Please try again or choose Cash on Delivery.', 'error');
-            $this->redirect('/orders/' . $orderId);
+            // ── Payment succeeded immediately (no 3DS) ──
+            if ($result['status'] === 'paid') {
+                PusherService::newOrder($order);
+                PusherService::orderStatusChanged($order, 'confirmed');
+                $items = $this->orderItemModel->getByOrder((int)$orderId);
+                $this->sendOrderConfirmationEmail($order, $items);
+                $this->redirect('/payment/success?order=' . urlencode($order['order_number']));
+                return;
+            }
+
+            // ── Payment failed ──
+            $this->redirect('/payment/failed?order=' . urlencode($order['order_number']));
             return;
         }
 
         // ── COD flow ──────────────────────────
-        // Notify admin of new order
         PusherService::newOrder($order);
+
+        // ── Send order confirmation email ─────
+        $this->sendOrderConfirmationEmail($order, $items);
 
         Session::flash('message', 'Order placed successfully! Your order number is ' . $order['order_number'] . '.', 'success');
         $this->redirect('/orders/' . $orderId);
@@ -406,7 +414,6 @@ class OrderController extends Controller {
     //  CUSTOMER ORDERS
     // ══════════════════════════════════════════
 
-    // ── GET /orders ───────────────────────────
     public function myOrders(): void {
         $this->requireAuth();
 
@@ -428,7 +435,6 @@ class OrderController extends Controller {
         ], 'main');
     }
 
-    // ── GET /orders/{id} ──────────────────────
     public function show(array $params): void {
         $this->requireAuth();
 
@@ -450,7 +456,6 @@ class OrderController extends Controller {
         ], 'main');
     }
 
-    // ── POST /orders/{id}/cancel ──────────────
     public function cancel(array $params): void {
         $this->requireAuth();
 
@@ -531,7 +536,6 @@ class OrderController extends Controller {
             return;
         }
 
-        // Define allowed next steps for each status
         $transitions = [
             'pending'    => ['confirmed', 'cancelled'],
             'confirmed'  => ['processing', 'cancelled'],
@@ -540,6 +544,24 @@ class OrderController extends Controller {
             'delivered'  => [],
             'cancelled'  => [],
         ];
+
+        // ── Backend payment guard ─────────────
+        if (
+            $order['payment_method'] === 'online' &&
+            $order['status']         === 'pending' &&
+            $newStatus               === 'confirmed'
+        ) {
+            $db      = Database::getInstance();
+            $payment = $db->queryOne(
+                "SELECT status FROM payments WHERE order_id = ? LIMIT 1",
+                [$orderId]
+            );
+
+            if (!$payment || $payment['status'] !== 'paid') {
+                $this->jsonError('Cannot confirm — payment has not been completed yet.');
+                return;
+            }
+        }
 
         $current = $order['status'];
         $allowed = $transitions[$current] ?? [];
@@ -552,12 +574,82 @@ class OrderController extends Controller {
         $success = $this->orderModel->updateStatus($orderId, $newStatus, Session::userId(), $notes);
 
         if ($success) {
-            // ── Pusher: notify customer + admin of status change ──
+            // ── Pusher: notify customer of status change ──
             PusherService::orderStatusChanged($order, $newStatus);
+
+            // ── Send status email to customer ─────────────
+            $this->sendOrderStatusEmail($order, $newStatus, $notes);
 
             $this->jsonSuccess(['new_status' => $newStatus], 'Order status updated.');
         } else {
             $this->jsonError('Failed to update order status.');
         }
+    }
+
+    // ══════════════════════════════════════════
+    //  EMAIL HELPERS
+    // ══════════════════════════════════════════
+
+    public static function sendOrderConfirmationEmail(array $order, array $items): void {
+        try {
+            $mailer = new Mailer();
+            $mailer->send(
+                $order['email'],
+                trim(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')),
+                'Your Petal & Soul Order is Confirmed 🌸',
+                'emails/order-confirmation',
+                [
+                    'order'    => $order,
+                    'items'    => $items,
+                    'customer' => [
+                        'name'  => trim(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')),
+                        'email' => $order['email'] ?? '',
+                    ],
+                ]
+            );
+        } catch (Throwable $e) {
+            Logger::error('Order confirmation email failed: ' . $e->getMessage(), [
+                'order_id' => $order['id'] ?? null,
+            ]);
+        }
+    }
+
+    private function sendOrderStatusEmail(array $order, string $newStatus, string $note = ''): void {
+        if ($newStatus === 'pending') return;
+
+        try {
+            $mailer = new Mailer();
+            $mailer->send(
+                $order['email'],
+                trim(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')),
+                'Order Update: ' . $this->statusLabel($newStatus) . ' — ' . ($order['order_number'] ?? ''),
+                'emails/order-status',
+                [
+                    'order'     => $order,
+                    'customer'  => [
+                        'name'  => trim(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')),
+                        'email' => $order['email'] ?? '',
+                    ],
+                    'newStatus' => $newStatus,
+                    'note'      => $note,
+                ]
+            );
+        } catch (Throwable $e) {
+            Logger::error('Order status email failed: ' . $e->getMessage(), [
+                'order_id'   => $order['id'] ?? null,
+                'new_status' => $newStatus,
+            ]);
+        }
+    }
+
+    private function statusLabel(string $status): string {
+        return match($status) {
+            'confirmed'  => 'Order Confirmed',
+            'processing' => 'Being Prepared',
+            'ready'      => 'Ready for Delivery',
+            'delivered'  => 'Delivered',
+            'cancelled'  => 'Cancelled',
+            default      => ucfirst($status),
+        };
     }
 }

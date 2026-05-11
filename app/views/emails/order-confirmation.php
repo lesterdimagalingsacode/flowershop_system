@@ -2,121 +2,278 @@
 // app/views/emails/order-confirmation.php
 // Variables available: $order, $items, $customer
 // Called from OrderController::checkout() after order is placed
+
+$appName = APP_NAME ?? 'Petal & Soul';
+$appUrl  = APP_URL  ?? '#';
+
+$paymentLabel = match($order['payment_method'] ?? 'cod') {
+    'online' => '💳 Online Payment',
+    'cod'    => '💵 Cash on Delivery',
+    default  => ucfirst($order['payment_method'] ?? 'COD'),
+};
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Order Confirmed — Petal &amp; Soul</title>
-    <style>
-        body        { margin:0; padding:0; background:#f9fafb; font-family:'Segoe UI',Arial,sans-serif; color:#374151; }
-        .wrapper    { max-width:600px; margin:32px auto; background:#fff; border-radius:16px; overflow:hidden; border:1px solid #e5e7eb; }
-        .header     { background:#ec4899; padding:28px 32px; text-align:center; }
-        .header h1  { margin:0; color:#fff; font-size:22px; font-weight:700; }
-        .header p   { margin:6px 0 0; color:#fce7f3; font-size:13px; }
-        .body       { padding:32px; }
-        .body p     { font-size:14px; line-height:1.6; margin:0 0 12px; color:#4b5563; }
-        .order-box  { background:#fdf2f8; border:1px solid #fbcfe8; border-radius:12px; padding:16px 20px; margin:20px 0; }
-        .order-box p{ margin:0; font-size:13px; color:#9d174d; }
-        .order-box .order-num { font-size:22px; font-weight:800; color:#db2777; margin:4px 0 0; }
-        table.items { width:100%; border-collapse:collapse; margin:20px 0; font-size:13px; }
-        table.items th { text-align:left; padding:8px 10px; background:#f3f4f6; color:#6b7280; font-weight:600; border-radius:6px; }
-        table.items td { padding:10px 10px; border-bottom:1px solid #f3f4f6; color:#374151; vertical-align:top; }
-        table.items td.qty  { text-align:center; color:#6b7280; }
-        table.items td.price{ text-align:right; font-weight:600; }
-        .totals     { margin-top:8px; }
-        .totals tr td { padding:6px 10px; font-size:13px; }
-        .totals tr td:last-child { text-align:right; font-weight:600; }
-        .totals tr.grand td { font-size:15px; color:#db2777; border-top:2px solid #fbcfe8; padding-top:12px; }
-        .address-box{ background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:14px 18px; margin:20px 0; font-size:13px; color:#4b5563; line-height:1.7; }
-        .badge      { display:inline-block; background:#fef3c7; color:#92400e; font-size:12px; font-weight:600; padding:3px 10px; border-radius:99px; }
-        .footer     { padding:20px 32px; border-top:1px solid #f3f4f6; text-align:center; }
-        .footer p   { font-size:12px; color:#9ca3af; margin:0; }
-        .footer a   { color:#ec4899; text-decoration:none; }
-        .btn        { display:inline-block; background:#ec4899; color:#fff; text-decoration:none; padding:12px 28px; border-radius:10px; font-weight:700; font-size:14px; margin:16px 0; }
-    </style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Order Confirmed — <?= htmlspecialchars($appName) ?></title>
 </head>
-<body>
-<div class="wrapper">
+<body style="margin:0;padding:0;background:#f0ebe1;font-family:'Georgia',serif;">
 
-    <div class="header">
-        <h1>🌸 Petal &amp; Soul</h1>
-        <p>Your order has been placed!</p>
-    </div>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f0ebe1;padding:48px 16px;">
+    <tr>
+        <td align="center">
+            <table width="100%" style="max-width:560px;">
 
-    <div class="body">
-        <p>Hi <strong><?= htmlspecialchars($customer['name']) ?></strong>,</p>
-        <p>Thank you for your order! We've received it and will start preparing it shortly. Here's your order summary:</p>
-
-        <!-- Order number + status -->
-        <div class="order-box">
-            <p>Order Number</p>
-            <p class="order-num">#<?= $order['id'] ?></p>
-            <p style="margin-top:8px;">
-                Payment: <span class="badge"><?= ucfirst(htmlspecialchars($order['payment_method'] ?? 'COD')) ?></span>
-            </p>
-        </div>
-
-        <!-- Items table -->
-        <table class="items">
-            <thead>
+                <!-- Top flourish -->
                 <tr>
-                    <th>Product</th>
-                    <th style="text-align:center;">Qty</th>
-                    <th style="text-align:right;">Price</th>
+                    <td align="center" style="padding-bottom:24px;">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width:60px;height:1px;background:linear-gradient(to right,transparent,#c4973a);"></td>
+                                <td style="padding:0 12px;color:#c4973a;font-size:18px;">✦</td>
+                                <td style="width:60px;height:1px;background:linear-gradient(to left,transparent,#c4973a);"></td>
+                            </tr>
+                        </table>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($items as $item): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($item['product_name']) ?></td>
-                        <td class="qty"><?= (int) $item['quantity'] ?></td>
-                        <td class="price">₱<?= number_format($item['price'] * $item['quantity'], 2) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
 
-        <!-- Totals -->
-        <table class="totals" style="width:100%;border-collapse:collapse;">
-            <tr>
-                <td style="color:#6b7280;">Subtotal</td>
-                <td style="text-align:right;font-weight:600;">₱<?= number_format($order['subtotal'] ?? $order['total_amount'], 2) ?></td>
-            </tr>
-            <?php if (! empty($order['discount_amount']) && $order['discount_amount'] > 0): ?>
+                <!-- Main card -->
                 <tr>
-                    <td style="color:#16a34a;">Discount</td>
-                    <td style="text-align:right;font-weight:600;color:#16a34a;">−₱<?= number_format($order['discount_amount'], 2) ?></td>
+                    <td style="background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e2d9cc;box-shadow:0 8px 40px rgba(0,0,0,0.07);">
+
+                        <!-- Header -->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="background:#1e3a2f;padding:36px 48px 32px;text-align:center;">
+                                    <p style="margin:0 0 4px;color:#c4973a;font-size:11px;letter-spacing:4px;text-transform:uppercase;">Est. 2025</p>
+                                    <h1 style="margin:0 0 12px;color:#ffffff;font-size:28px;font-weight:normal;letter-spacing:3px;font-family:'Georgia',serif;">
+                                        Petal &amp; Soul
+                                    </h1>
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td align="center">
+                                                <table cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td style="width:32px;height:1px;background:rgba(196,151,58,0.4);"></td>
+                                                        <td style="padding:0 8px;color:#c4973a;font-size:12px;">🌸</td>
+                                                        <td style="width:32px;height:1px;background:rgba(196,151,58,0.4);"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin:12px 0 0;color:rgba(255,255,255,0.55);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;">
+                                        Order Confirmation
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Order number badge -->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="padding:32px 48px 0;">
+                                    <table width="100%" cellpadding="0" cellspacing="0"
+                                           style="background:#f7f3ee;border:1px solid #e2d9cc;border-radius:16px;">
+                                        <tr>
+                                            <td style="padding:20px 24px;text-align:center;">
+                                                <p style="margin:0 0 4px;color:#9b9080;font-size:11px;letter-spacing:3px;text-transform:uppercase;">Order Number</p>
+                                                <p style="margin:0 0 8px;color:#1e3a2f;font-size:26px;font-weight:normal;font-family:'Georgia',serif;letter-spacing:1px;">
+                                                    <?= htmlspecialchars($order['order_number'] ?? '#' . $order['id']) ?>
+                                                </p>
+                                                <span style="display:inline-block;background:#1e3a2f;color:#c4973a;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 16px;border-radius:50px;">
+                                                    <?= $paymentLabel ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Body -->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="padding:28px 48px 40px;">
+
+                                    <!-- Greeting -->
+                                    <p style="margin:0 0 6px;color:#1e3a2f;font-size:20px;font-weight:normal;font-family:'Georgia',serif;">
+                                        Hi <?= htmlspecialchars($customer['name'] ?? 'there') ?> 🌸
+                                    </p>
+                                    <p style="margin:0 0 24px;color:#7a6e63;font-size:14px;line-height:1.7;">
+                                        Thank you for your order! We've received it and will start preparing your
+                                        beautiful blooms shortly. Here's your order summary:
+                                    </p>
+
+                                    <!-- Divider -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                                        <tr>
+                                            <td style="height:1px;background:linear-gradient(to right,transparent,#e2d9cc,transparent);"></td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Items -->
+                                    <p style="margin:0 0 12px;color:#9b9080;font-size:11px;letter-spacing:2px;text-transform:uppercase;">Items Ordered</p>
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:4px;">
+                                        <!-- Header row -->
+                                        <tr style="background:#f7f3ee;">
+                                            <td style="padding:8px 12px;color:#9b9080;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-radius:8px 0 0 0;">Product</td>
+                                            <td style="padding:8px 12px;color:#9b9080;font-size:11px;letter-spacing:1px;text-transform:uppercase;text-align:center;">Qty</td>
+                                            <td style="padding:8px 12px;color:#9b9080;font-size:11px;letter-spacing:1px;text-transform:uppercase;text-align:right;border-radius:0 8px 0 0;">Price</td>
+                                        </tr>
+                                        <?php foreach ($items as $item): ?>
+                                        <tr>
+                                            <td style="padding:12px 12px;color:#1e3a2f;font-size:13px;border-bottom:1px solid #f0ebe1;">
+                                                <?= htmlspecialchars($item['product_name'] ?? $item['name'] ?? '') ?>
+                                            </td>
+                                            <td style="padding:12px 12px;color:#7a6e63;font-size:13px;text-align:center;border-bottom:1px solid #f0ebe1;">
+                                                <?= (int)($item['quantity'] ?? 1) ?>
+                                            </td>
+                                            <td style="padding:12px 12px;color:#1e3a2f;font-size:13px;font-weight:600;text-align:right;border-bottom:1px solid #f0ebe1;">
+                                                ₱<?= number_format(($item['price'] ?? $item['unit_price'] ?? 0) * ($item['quantity'] ?? 1), 2) ?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </table>
+
+                                    <!-- Totals -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                                        <tr>
+                                            <td style="padding:8px 12px;color:#7a6e63;font-size:13px;">Subtotal</td>
+                                            <td style="padding:8px 12px;color:#1e3a2f;font-size:13px;text-align:right;">
+                                                ₱<?= number_format((float)($order['subtotal'] ?? $order['total_amount']), 2) ?>
+                                            </td>
+                                        </tr>
+                                        <?php if ((float)($order['delivery_fee'] ?? 0) > 0): ?>
+                                        <tr>
+                                            <td style="padding:4px 12px;color:#7a6e63;font-size:13px;">Delivery</td>
+                                            <td style="padding:4px 12px;color:#1e3a2f;font-size:13px;text-align:right;">
+                                                ₱<?= number_format((float)$order['delivery_fee'], 2) ?>
+                                            </td>
+                                        </tr>
+                                        <?php else: ?>
+                                        <tr>
+                                            <td style="padding:4px 12px;color:#7a6e63;font-size:13px;">Delivery</td>
+                                            <td style="padding:4px 12px;color:#15803d;font-size:13px;text-align:right;">Free</td>
+                                        </tr>
+                                        <?php endif; ?>
+                                        <?php if ((float)($order['discount_amount'] ?? 0) > 0): ?>
+                                        <tr>
+                                            <td style="padding:4px 12px;color:#15803d;font-size:13px;">
+                                                Discount<?= !empty($order['promo_code']) ? ' (' . htmlspecialchars($order['promo_code']) . ')' : '' ?>
+                                            </td>
+                                            <td style="padding:4px 12px;color:#15803d;font-size:13px;text-align:right;font-weight:600;">
+                                                −₱<?= number_format((float)$order['discount_amount'], 2) ?>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
+                                        <!-- Grand total -->
+                                        <tr>
+                                            <td colspan="2" style="padding-top:4px;">
+                                                <table width="100%" cellpadding="0" cellspacing="0"
+                                                       style="background:#f7f3ee;border-radius:10px;border:1px solid #e2d9cc;">
+                                                    <tr>
+                                                        <td style="padding:12px 16px;color:#1e3a2f;font-size:14px;font-family:'Georgia',serif;">Total</td>
+                                                        <td style="padding:12px 16px;color:#1e3a2f;font-size:18px;font-weight:normal;text-align:right;font-family:'Georgia',serif;">
+                                                            ₱<?= number_format((float)$order['total_amount'], 2) ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Divider -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                                        <tr>
+                                            <td style="height:1px;background:linear-gradient(to right,transparent,#e2d9cc,transparent);"></td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Delivery address -->
+                                    <p style="margin:0 0 10px;color:#9b9080;font-size:11px;letter-spacing:2px;text-transform:uppercase;">Delivery Address</p>
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+                                        <tr>
+                                            <td style="background:#f7f3ee;border:1px solid #e2d9cc;border-radius:12px;padding:14px 18px;">
+                                                <p style="margin:0;color:#7a6e63;font-size:13px;line-height:1.7;">
+                                                    <?= nl2br(htmlspecialchars($order['delivery_address'] ?? '')) ?>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- CTA Button -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+                                        <tr>
+                                            <td align="center">
+                                                <a href="<?= htmlspecialchars($appUrl) ?>/orders/<?= (int)$order['id'] ?>"
+                                                   style="display:inline-block;background:#1e3a2f;color:#ffffff;text-decoration:none;font-family:'Georgia',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;padding:16px 44px;border-radius:50px;border:1px solid #2d5443;">
+                                                    View My Order →
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Questions -->
+                                    <p style="margin:0 0 16px;color:#9b9080;font-size:13px;text-align:center;">
+                                        Questions? <a href="<?= htmlspecialchars($appUrl) ?>/contact" style="color:#1e3a2f;text-decoration:underline;">Contact us here</a>
+                                    </p>
+
+                                    <!-- Sign off -->
+                                    <p style="margin:0;color:#7a6e63;font-size:14px;line-height:1.7;">
+                                        With love,<br>
+                                        <span style="color:#1e3a2f;font-size:15px;">The Petal &amp; Soul Team 🌿</span>
+                                    </p>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Footer -->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="background:#f7f3ee;border-top:1px solid #e2d9cc;padding:20px 48px;text-align:center;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+                                        <tr>
+                                            <td align="center">
+                                                <table cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td style="width:40px;height:1px;background:linear-gradient(to right,transparent,#c4973a);"></td>
+                                                        <td style="padding:0 8px;color:#c4973a;font-size:10px;">✦</td>
+                                                        <td style="width:40px;height:1px;background:linear-gradient(to left,transparent,#c4973a);"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin:0 0 4px;color:#b0a898;font-size:12px;">
+                                        &copy; <?= date('Y') ?> <?= htmlspecialchars($appName) ?> &nbsp;·&nbsp; Baler, Aurora, Philippines
+                                    </p>
+                                    <p style="margin:0;color:#c8bdb0;font-size:11px;">
+                                        <a href="<?= htmlspecialchars($appUrl) ?>" style="color:#c8bdb0;text-decoration:none;">petalsoul.com</a>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
                 </tr>
-            <?php endif; ?>
-            <tr class="grand">
-                <td><strong>Total</strong></td>
-                <td style="text-align:right;font-weight:800;color:#db2777;font-size:15px;">₱<?= number_format($order['total_amount'], 2) ?></td>
-            </tr>
-        </table>
 
-        <!-- Delivery address -->
-        <p style="margin-top:20px;font-weight:600;font-size:13px;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;">Delivery Address</p>
-        <div class="address-box">
-            <?= nl2br(htmlspecialchars($order['delivery_address'])) ?>
-        </div>
+                <!-- Bottom flourish -->
+                <tr>
+                    <td align="center" style="padding-top:24px;">
+                        <p style="margin:0;color:#c8bdb0;font-size:11px;letter-spacing:1px;">
+                            🌸 &nbsp; Flowers with Feeling &nbsp; 🌸
+                        </p>
+                    </td>
+                </tr>
 
-        <div style="text-align:center;margin-top:24px;">
-            <a href="<?= APP_URL ?>/orders/<?= $order['id'] ?>" class="btn">View My Order →</a>
-        </div>
+            </table>
+        </td>
+    </tr>
+</table>
 
-        <p style="margin-top:24px;font-size:13px;color:#9ca3af;">
-            If you have any questions, <a href="<?= APP_URL ?>/contact" style="color:#ec4899;">contact us here</a>
-            or reply to this email.
-        </p>
-        <p>With love,<br/><strong>The Petal &amp; Soul Team 🌸</strong></p>
-    </div>
-
-    <div class="footer">
-        <p>Baler, Aurora, Philippines &nbsp;·&nbsp; <a href="<?= APP_URL ?>">petalsoul.com</a></p>
-    </div>
-
-</div>
 </body>
 </html>

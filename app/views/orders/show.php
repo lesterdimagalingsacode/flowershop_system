@@ -158,18 +158,23 @@
                 </div>
 
                 <!-- ── Pay Now (pending online payment only) ── -->
+                <!-- ── Pay Now (pending online payment only) ── -->
                 <?php if ($order['status'] === 'pending' && $order['payment_method'] === 'online'): ?>
-                <form method="POST" action="<?= APP_URL ?>/payment/retry/<?= (int)$order['id'] ?>">
-                    <?= csrf_field() ?>
-                    <button type="submit"
-                        class="w-full bg-forest hover:bg-pine text-white text-sm font-semibold py-3 rounded-full transition-all hover:-translate-y-px shadow-sm">
-                        💳 Complete Payment
-                    </button>
-                </form>
-                <p class="text-xs text-muted text-center -mt-2">
+                <button onclick="RetryModal.open()"
+                    class="w-full bg-forest hover:bg-pine text-white text-sm font-semibold py-3 rounded-full transition-all hover:-translate-y-px shadow-sm">
+                    💳 Complete Payment
+                </button>
+                <p class="text-xs text-muted text-center">
                     Your order is saved. Complete payment to confirm it.
                 </p>
                 <?php endif; ?>
+
+                <?php
+                $retryOrderId     = $order['id'];
+                $retryOrderNumber = $order['order_number'];
+                $retryTotal       = $order['total_amount'];
+                include __DIR__ . '/../partials/retry_payment_modal.php';
+                ?>
 
                 <!-- Cancel button -->
                 <?php if (in_array($order['status'], ['pending', 'confirmed'])): ?>

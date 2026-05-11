@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 class LandingController extends Controller {
     public function index(): void {
-        $this->view('landing', [], 'main');
+        $productModel = new Product();
+        $featured     = $productModel->getAll(['availability' => 'in_stock'], 4, 0);
+
+        $this->view('landing', [
+            'featured' => $featured,
+        ], 'main');
     }
 }

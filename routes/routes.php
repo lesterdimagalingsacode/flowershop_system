@@ -34,6 +34,15 @@ $router->get('/api/psgc/barangays',      [PsgcController::class, 'barangays']);
 $router->get ('/contact', [MessageController::class, 'contact']);
 $router->post('/contact', [MessageController::class, 'store']);
 
+// ── Profile (auth required) ───────────────────
+$router->get ('/profile',          [AuthController::class, 'profileForm']);
+$router->post('/profile',          [AuthController::class, 'updateProfile']);
+$router->post('/profile/password', [AuthController::class, 'updatePassword']);
+
+$router->get ('/admin/backup',         [BackupController::class, 'index']);
+    $router->get ('/admin/backup/download', [BackupController::class, 'download']);
+    $router->post('/admin/backup/restore',  [BackupController::class, 'restore']);
+
 // ══════════════════════════════════════════════
 //  CUSTOMER ROUTES (must be logged in)
 // ══════════════════════════════════════════════
@@ -73,6 +82,7 @@ $router->group('/orders', function(Router $router) {
 $router->get ('/payment/success',  [PaymentController::class, 'success']);
 $router->get ('/payment/failed',   [PaymentController::class, 'failed']);
 $router->get ('/payment/cancel',   [PaymentController::class, 'cancel']);
+$router->post ('/payment/retry/{id}',    [PaymentController::class, 'retry']);
 $router->post('/webhook/paymongo', [PaymentController::class, 'webhook']);
 
 // ── Promo Code Validation (AJAX, auth required) ─
@@ -132,5 +142,7 @@ $router->group('/admin', function(Router $router) {
     $router->get('/api/inventory-chart',   [DashboardController::class, 'inventoryChart']);
     $router->get('/api/best-sellers',      [DashboardController::class, 'bestSellers']);
     $router->get('/api/status-chart',      [DashboardController::class, 'statusChart']);
+
+   
 
 });

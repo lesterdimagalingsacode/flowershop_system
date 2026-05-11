@@ -71,7 +71,7 @@ define('RATE_LIMIT_DECAY', (int) env('RATE_LIMIT_DECAY_MINUTES', 15));
 // ── PayMongo ──────────────────────────────────
 define('PAYMONGO_PUBLIC_KEY',      env('PAYMONGO_PUBLIC_KEY'));
 define('PAYMONGO_SECRET_KEY',      env('PAYMONGO_SECRET_KEY'));
-define('PAYMONGO_WEBHOOK_SECRET',  env('PAYMONGO_WEBHOOK_SECRET'));
+define('PAYMONGO_WEBHOOK_SECRET', env('PAYMONGO_WEBHOOK_SECRET', ''));
 define('PAYMONGO_BASE_URL',        'https://api.paymongo.com/v1');
 
 // ── Mailer ────────────────────────────────────
