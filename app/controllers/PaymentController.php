@@ -16,129 +16,129 @@ class PaymentController extends Controller {
 
     // ── Create PayMongo Checkout Session ──────
     public static function createCheckoutSession(array $order, array $items): string|false
-{
-    $secretKey = base64_encode(PAYMONGO_SECRET_KEY . ':');
+    {
+        $secretKey = base64_encode(PAYMONGO_SECRET_KEY . ':');
 
-    // ── Build line items (no negative amounts) ──
-    $lineItems      = [];
-    $itemsTotal     = 0;
+        // ── Build line items (no negative amounts) ──
+        $lineItems  = [];
+        $itemsTotal = 0;
 
-    foreach ($items as $item) {
-        $unitPrice  = (float)($item['unit_price'] ?? $item['price'] ?? 0);
-        $quantity   = (int)$item['quantity'];
-        $amount     = (int)round($unitPrice * 100);
-        $itemsTotal += $amount * $quantity;
+        foreach ($items as $item) {
+            $unitPrice  = (float)($item['unit_price'] ?? $item['price'] ?? 0);
+            $quantity   = (int)$item['quantity'];
+            $amount     = (int)round($unitPrice * 100);
+            $itemsTotal += $amount * $quantity;
 
-        $lineItems[] = [
-            'currency' => 'PHP',
-            'amount'   => $amount,
-            'name'     => $item['name'],
-            'quantity' => $quantity,
+            $lineItems[] = [
+                'currency' => 'PHP',
+                'amount'   => $amount,
+                'name'     => $item['name'],
+                'quantity' => $quantity,
+            ];
+        }
+
+        // ── Apply discount by reducing the first item's effective amount ──
+        $discountCents = (int)round((float)($order['discount_amount'] ?? 0) * 100);
+        if ($discountCents > 0 && !empty($lineItems)) {
+            $lineItems[0]['amount'] = max(1, $lineItems[0]['amount'] - (int)ceil($discountCents / $lineItems[0]['quantity']));
+        }
+
+        // ── Delivery fee ──
+        if ((float)($order['delivery_fee'] ?? 0) > 0) {
+            $lineItems[] = [
+                'currency' => 'PHP',
+                'amount'   => (int)round($order['delivery_fee'] * 100),
+                'name'     => 'Delivery Fee',
+                'quantity' => 1,
+            ];
+        }
+
+        // ── Billing info ──
+        $addressParts = array_map('trim', explode(',', $order['delivery_address'] ?? ''));
+        $totalParts   = count($addressParts);
+        $province     = $totalParts >= 4 ? $addressParts[$totalParts - 2] : '';
+        $municipality = $totalParts >= 3 ? $addressParts[$totalParts - 3] : '';
+        $line1Parts   = array_slice($addressParts, 0, $totalParts - 2);
+        $addressLine1 = implode(', ', $line1Parts);
+
+        $billingInfo = [
+            'name'    => trim(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')),
+            'email'   => $order['email'] ?? '',
+            'phone'   => $order['phone'] ?? '',
+            'address' => [
+                'line1'       => $addressLine1,
+                'city'        => $municipality,
+                'state'       => $province,
+                'postal_code' => '',
+                'country'     => 'PH',
+            ],
         ];
-    }
 
-    // ── Apply discount by reducing the first item's effective amount ──
-    $discountCents = (int)round((float)($order['discount_amount'] ?? 0) * 100);
-    if ($discountCents > 0 && !empty($lineItems)) {
-        $lineItems[0]['amount'] = max(1, $lineItems[0]['amount'] - (int)ceil($discountCents / $lineItems[0]['quantity']));
-    }
-
-    // ── Delivery fee ──
-    if ((float)($order['delivery_fee'] ?? 0) > 0) {
-        $lineItems[] = [
-            'currency' => 'PHP',
-            'amount'   => (int)round($order['delivery_fee'] * 100),
-            'name'     => 'Delivery Fee',
-            'quantity' => 1,
-        ];
-    }
-
-    // ── Billing info ──
-    $addressParts = array_map('trim', explode(',', $order['delivery_address'] ?? ''));
-    $totalParts   = count($addressParts);
-    $province     = $totalParts >= 4 ? $addressParts[$totalParts - 2] : '';
-    $municipality = $totalParts >= 3 ? $addressParts[$totalParts - 3] : '';
-    $line1Parts   = array_slice($addressParts, 0, $totalParts - 2);
-    $addressLine1 = implode(', ', $line1Parts);
-
-    $billingInfo = [
-        'name'    => trim(($order['first_name'] ?? '') . ' ' . ($order['last_name'] ?? '')),
-        'email'   => $order['email'] ?? '',
-        'phone'   => $order['phone'] ?? '',
-        'address' => [
-            'line1'       => $addressLine1,
-            'city'        => $municipality,
-            'state'       => $province,
-            'postal_code' => '',
-            'country'     => 'PH',
-        ],
-    ];
-
-    // ── Payload ──
-    $payload = [
-        'data' => [
-            'attributes' => [
-                'line_items'           => $lineItems,
-                'payment_method_types' => ['card', 'qrph'],
-                'success_url'          => APP_URL . '/payment/success?order=' . urlencode($order['order_number']),
-                'cancel_url'           => APP_URL . '/payment/failed?order='  . urlencode($order['order_number']),
-                'description'          => 'Petal & Soul Order ' . $order['order_number'],
-                'billing'              => $billingInfo,
-                'metadata'             => [
-                    'order_id'     => (string)$order['id'],
-                    'order_number' => $order['order_number'],
+        // ── Payload ──
+        $payload = [
+            'data' => [
+                'attributes' => [
+                    'line_items'           => $lineItems,
+                    'payment_method_types' => ['card', 'qrph'],
+                    'success_url'          => APP_URL . '/payment/success?order=' . urlencode($order['order_number']),
+                    'cancel_url'           => APP_URL . '/payment/failed?order='  . urlencode($order['order_number']),
+                    'description'          => 'Petal & Soul Order ' . $order['order_number'],
+                    'billing'              => $billingInfo,
+                    'metadata'             => [
+                        'order_id'     => (string)$order['id'],
+                        'order_number' => $order['order_number'],
+                    ],
                 ],
             ],
-        ],
-    ];
+        ];
 
-    $idempotencyKey = 'order_' . $order['id'] . '_' . time();
+        $idempotencyKey = 'order_' . $order['id'] . '_' . time();
 
-    // ── cURL ──
-    $ch = curl_init('https://api.paymongo.com/v1/checkout_sessions');
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_HTTPHEADER     => [
-            'Content-Type: application/json',
-            'Accept: application/json',
-            'Authorization: Basic ' . $secretKey,
-            'Idempotency-Key: ' . $idempotencyKey,
-        ],
-        CURLOPT_POSTFIELDS => json_encode($payload),
-    ]);
+        // ── cURL ──
+        $ch = curl_init('https://api.paymongo.com/v1/checkout_sessions');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_HTTPHEADER     => [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Basic ' . $secretKey,
+                'Idempotency-Key: ' . $idempotencyKey,
+            ],
+            CURLOPT_POSTFIELDS => json_encode($payload),
+        ]);
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-    // TEMP DEBUG — writes to a file you can read
-    file_put_contents(__DIR__ . '/../../storage/logs/paymongo_debug.txt', 
-        "HTTP: $httpCode\nRESPONSE: $response\nPAYLOAD: " . json_encode($payload) . "\n",
-        FILE_APPEND
-    );
-
-    if ($httpCode !== 200 && $httpCode !== 201) {
-        Logger::error('PayMongo createCheckoutSession failed [HTTP ' . $httpCode . ']: ' . $response);
-        return false;
-    }
-
-    $data        = json_decode($response, true);
-    $checkoutUrl = $data['data']['attributes']['checkout_url'] ?? false;
-
-    if ($checkoutUrl) {
-        $sessionId = $data['data']['id'];
-        $db = Database::getInstance();
-        $db->execute(
-            "INSERT INTO payments (order_id, paymongo_link_id, idempotency_key, amount, currency, status, payment_method)
-             VALUES (?, ?, ?, ?, 'PHP', 'pending', 'online')
-             ON DUPLICATE KEY UPDATE paymongo_link_id = VALUES(paymongo_link_id), idempotency_key = VALUES(idempotency_key)",
-            [$order['id'], $sessionId, $idempotencyKey, $order['total_amount']]
+        // TEMP DEBUG — writes to a file you can read
+        file_put_contents(__DIR__ . '/../../storage/logs/paymongo_debug.txt',
+            "HTTP: $httpCode\nRESPONSE: $response\nPAYLOAD: " . json_encode($payload) . "\n",
+            FILE_APPEND
         );
-    }
 
-    return $checkoutUrl;
-}
+        if ($httpCode !== 200 && $httpCode !== 201) {
+            Logger::error('PayMongo createCheckoutSession failed [HTTP ' . $httpCode . ']: ' . $response);
+            return false;
+        }
+
+        $data        = json_decode($response, true);
+        $checkoutUrl = $data['data']['attributes']['checkout_url'] ?? false;
+
+        if ($checkoutUrl) {
+            $sessionId = $data['data']['id'];
+            $db = Database::getInstance();
+            $db->execute(
+                "INSERT INTO payments (order_id, paymongo_link_id, idempotency_key, amount, currency, status, payment_method)
+                 VALUES (?, ?, ?, ?, 'PHP', 'pending', 'online')
+                 ON DUPLICATE KEY UPDATE paymongo_link_id = VALUES(paymongo_link_id), idempotency_key = VALUES(idempotency_key)",
+                [$order['id'], $sessionId, $idempotencyKey, $order['total_amount']]
+            );
+        }
+
+        return $checkoutUrl;
+    }
 
     // ── Create & Attach Payment Intent ────────
     public static function createAndAttachPaymentIntent(array $order, array $items, string $paymentMethodId): array|false {
@@ -149,11 +149,11 @@ class PaymentController extends Controller {
         $intentPayload = [
             'data' => [
                 'attributes' => [
-                    'amount'               => $amount,
-                    'currency'             => 'PHP',
-                    'payment_method_allowed' => ['card'],   
-                    'description'          => 'Petal & Soul Order ' . $order['order_number'],
-                    'metadata'             => [
+                    'amount'                 => $amount,
+                    'currency'               => 'PHP',
+                    'payment_method_allowed' => ['card'],
+                    'description'            => 'Petal & Soul Order ' . $order['order_number'],
+                    'metadata'               => [
                         'order_id'     => (string) $order['id'],
                         'order_number' => $order['order_number'],
                     ],
@@ -241,6 +241,7 @@ class PaymentController extends Controller {
         }
 
         // ── Succeeded immediately (no 3DS) ────
+        // Mark as paid locally. success() will see this and skip the API call.
         if ($status === 'succeeded') {
             $payments      = $attachData['data']['attributes']['payments'] ?? [];
             $paymongoPayId = $payments[0]['id'] ?? null;
@@ -260,6 +261,14 @@ class PaymentController extends Controller {
                 (int)$order['user_id'],
                 'Payment confirmed via PayMongo Payment Intent (' . $payMethod . ')'
             );
+
+            // ── Fire Pusher here for the no-3DS fast path ──
+            // success() will see status=paid and skip API + skip Pusher.
+            if (class_exists('PusherService')) {
+                $freshOrder = $orderModel->findById((int)$order['id']);
+                PusherService::newOrder($freshOrder);
+                PusherService::orderStatusChanged($freshOrder, 'confirmed');
+            }
 
             return ['status' => 'paid'];
         }
@@ -293,18 +302,36 @@ class PaymentController extends Controller {
         }
 
         $payment       = $this->orderModel->getPayment((int)$order['id']);
-        $verified      = false;
         $paymentMethod = 'online';
 
+        // ── SHORT-CIRCUIT: already paid locally — skip PayMongo API call ──
+        // This handles the no-3DS card path (paid instantly in createAndAttachPaymentIntent)
+        // and repeat page loads. No round-trip to PayMongo needed.
+        if ($payment && $payment['status'] === 'paid') {
+            $orderItemModel = new OrderItem();
+            $items          = $orderItemModel->getByOrder((int)$order['id']);
+
+            $this->view('payment/success', [
+                'title'    => 'Payment Successful',
+                'order'    => $order,
+                'verified' => true,
+            ], 'main');
+            return;
+        }
+
+        // ── SLOW PATH: 3DS return — must verify with PayMongo ────────────
+        // Only reaches here after a 3DS redirect back from the bank.
+        $verified = false;
+
         if ($payment && $payment['paymongo_link_id']) {
-            // ── Try Payment Intent verify first ──
+            // Try Payment Intent verify first
             $verified = $this->verifyPaymentIntent(
                 $payment['paymongo_link_id'],
                 (int)$order['id'],
                 $paymentMethod
             );
 
-            // ── Fallback to Checkout Session verify ──
+            // Fallback to Checkout Session verify
             if (!$verified) {
                 $verified = $this->verifyCheckoutSession(
                     $payment['paymongo_link_id'],
@@ -314,7 +341,6 @@ class PaymentController extends Controller {
             }
         }
 
-        // ── Guard: redirect to failed if payment not verified ──
         if (!$verified) {
             $this->redirect('/payment/failed?order=' . urlencode($orderNumber));
             return;
@@ -323,6 +349,7 @@ class PaymentController extends Controller {
         // Re-fetch after status update
         $order = $this->orderModel->findByOrderNumber($orderNumber);
 
+        // ── Fire Pusher only on the 3DS path (no-3DS already fired in createAndAttachPaymentIntent) ──
         if (class_exists('PusherService')) {
             PusherService::newOrder($order);
             PusherService::orderStatusChanged($order, 'confirmed');
@@ -365,7 +392,6 @@ class PaymentController extends Controller {
 
     // ── Verify Payment Intent (after 3DS return) ──
     private function verifyPaymentIntent(string $intentId, int $orderId, string &$paymentMethod): bool {
-        // Only process if it looks like a Payment Intent ID
         if (!str_starts_with($intentId, 'pi_')) return false;
 
         $secretKey = base64_encode(PAYMONGO_SECRET_KEY . ':');
@@ -399,7 +425,7 @@ class PaymentController extends Controller {
         $paymongoPaymentId = $payments[0]['id'] ?? null;
         $paidAt            = date('Y-m-d H:i:s');
 
-        $db = Database::getInstance();
+        $db       = Database::getInstance();
         $existing = $db->queryOne(
             "SELECT status FROM payments WHERE order_id = ? AND paymongo_link_id = ?",
             [$orderId, $intentId]
@@ -463,7 +489,7 @@ class PaymentController extends Controller {
         $paymongoPaymentId = $payments[0]['id'] ?? null;
         $paidAt            = date('Y-m-d H:i:s');
 
-        $db = Database::getInstance();
+        $db       = Database::getInstance();
         $existing = $db->queryOne(
             "SELECT status FROM payments WHERE order_id = ? AND paymongo_link_id = ?",
             [$orderId, $sessionId]
@@ -494,8 +520,8 @@ class PaymentController extends Controller {
 
     // ── PayMongo Webhook ──────────────────────
     public function webhook(): void {
-        $rawBody  = file_get_contents('php://input');
-        $payload  = json_decode($rawBody, true);
+        $rawBody = file_get_contents('php://input');
+        $payload = json_decode($rawBody, true);
 
         $sigHeader    = $_SERVER['HTTP_PAYMONGO_SIGNATURE'] ?? '';
         $webhookSecret = PAYMONGO_WEBHOOK_SECRET ?? '';
@@ -507,9 +533,9 @@ class PaymentController extends Controller {
                 $parts[$k] = $v;
             }
 
-            $timestamp    = $parts['t']  ?? '';
-            $testSig      = $parts['te'] ?? '';
-            $liveSig      = $parts['li'] ?? '';
+            $timestamp = $parts['t']  ?? '';
+            $testSig   = $parts['te'] ?? '';
+            $liveSig   = $parts['li'] ?? '';
 
             $signedPayload = $timestamp . '.' . $rawBody;
             $computedSig   = hash_hmac('sha256', $signedPayload, $webhookSecret);
@@ -521,8 +547,8 @@ class PaymentController extends Controller {
             }
         }
 
-        $eventType = $payload['data']['attributes']['type'] ?? '';
-        $eventData = $payload['data']['attributes']['data'] ?? [];
+        $eventType  = $payload['data']['attributes']['type'] ?? '';
+        $eventData  = $payload['data']['attributes']['data'] ?? [];
         $attributes = $eventData['attributes'] ?? [];
 
         http_response_code(200);
@@ -542,11 +568,15 @@ class PaymentController extends Controller {
     }
 
     // ── Handle payment.paid webhook ───────────
+    // NOTE: The webhook is a safety net (e.g. for async QR payments).
+    // For card/Payment Intent, success() or createAndAttachPaymentIntent()
+    // already marks the order paid. The status=paid guard below prevents
+    // double-firing Pusher and double-sending confirmation emails.
     private function handlePaymentPaid(array $attributes): void {
-        $paymongoPaymentId = $attributes['id']                  ?? null;
-        $sessionId         = $attributes['payment_intent_id']   ?? null;
+        $paymongoPaymentId = $attributes['id']                ?? null;
+        $sessionId         = $attributes['payment_intent_id'] ?? null;
         $paidAt            = date('Y-m-d H:i:s');
-        $paymentMethod     = $attributes['source']['type']      ?? 'online';
+        $paymentMethod     = $attributes['source']['type']    ?? 'online';
 
         if (!$paymongoPaymentId) return;
 
@@ -556,6 +586,7 @@ class PaymentController extends Controller {
             [$sessionId]
         );
 
+        // ── Guard: already handled by success() or createAndAttachPaymentIntent() ──
         if (!$payment || $payment['status'] === 'paid') return;
 
         $db->execute(
@@ -580,6 +611,7 @@ class PaymentController extends Controller {
         $items          = $orderItemModel->getByOrder((int)$payment['order_id']);
         OrderController::sendOrderConfirmationEmail($order, $items);
 
+        // ── Pusher fires here only if the webhook beats success() (rare edge case) ──
         if (class_exists('PusherService')) {
             PusherService::newOrder($order);
             PusherService::orderStatusChanged($order, 'confirmed');
@@ -605,16 +637,7 @@ class PaymentController extends Controller {
         );
     }
 
-    // ── Retry Payment ─────────────────────────
-   
-    // ─────────────────────────────────────────────────────────────────────────────
-    //  REPLACEMENT for retry() in app/controllers/PaymentController.php
-    //
-    //  Drop this method in place of the existing retry() method.
-    //  No other changes needed in PaymentController.php.
-    // ─────────────────────────────────────────────────────────────────────────────
-
-    // ── Retry Payment (Payment Intent flow) ──────
+    // ── Retry Payment (Payment Intent flow) ───
     public function retry(array $params = []): void {
         $id = (int)($params['id'] ?? 0);
 
@@ -646,7 +669,6 @@ class PaymentController extends Controller {
             return;
         }
 
-        // ── Expect payment_method_id from the retry modal form ──
         $paymentMethodId = trim($_POST['payment_method_id'] ?? '');
 
         if (!$paymentMethodId) {
@@ -658,7 +680,6 @@ class PaymentController extends Controller {
         $orderItemModel = new OrderItem();
         $items          = $orderItemModel->getByOrder($id);
 
-        // ── Use Payment Intent (same as main checkout) ──
         $result = self::createAndAttachPaymentIntent($order, $items, $paymentMethodId);
 
         if (!$result) {
@@ -667,19 +688,19 @@ class PaymentController extends Controller {
             return;
         }
 
-        // ── 3DS required → redirect to bank auth page ──
+        // 3DS required → redirect to bank auth page
         if (isset($result['redirect_url'])) {
             header('Location: ' . $result['redirect_url']);
             exit;
         }
 
-        // ── Paid immediately (no 3DS) ──
+        // Paid immediately (no 3DS) — Pusher already fired inside createAndAttachPaymentIntent
         if (($result['status'] ?? '') === 'paid') {
             $this->redirect('/payment/success?order=' . urlencode($order['order_number']));
             return;
         }
 
-        // ── Failed (declined etc.) ──
+        // Failed (declined etc.)
         Session::flash('error', 'Your card was declined. Please check your details and try again.');
         $this->redirect('/payment/failed?order=' . urlencode($order['order_number']));
     }

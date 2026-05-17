@@ -246,6 +246,11 @@ class ProductController extends Controller {
         ]);
 
         if ($id) {
+            Logger::audit('product.created', [
+                'model'    => 'Product',
+                'model_id' => $id,
+                'new'      => ['name' => $name, 'price' => $price, 'stock' => $stock],
+            ]);
             $this->flashRedirect('/admin/products', 'Product "' . $name . '" created successfully.', 'success');
         } else {
             $this->flashRedirect('/admin/products/create', 'Failed to create product. Please try again.', 'error');
@@ -335,6 +340,13 @@ class ProductController extends Controller {
             'is_active'       => $isActive,
         ]);
 
+        Logger::audit('product.updated', [
+            'model'    => 'Product',
+            'model_id' => $id,
+            'old'      => ['name' => $product['name'], 'price' => $product['price'], 'stock' => $product['stock']],
+            'new'      => ['name' => $name, 'price' => $price, 'stock' => $stock],
+        ]);
+
         $this->flashRedirect('/admin/products', 'Product updated successfully.', 'success');
     }
 
@@ -360,6 +372,13 @@ class ProductController extends Controller {
         }
 
         $this->productModel->delete($id);
+
+        Logger::audit('product.deleted', [
+            'model'    => 'Product',
+            'model_id' => $id,
+            'old'      => ['name' => $product['name'], 'price' => $product['price']],
+        ]);
+
         $this->flashRedirect('/admin/products', 'Product "' . $product['name'] . '" deleted.', 'success');
     }
 
@@ -407,6 +426,14 @@ class ProductController extends Controller {
         }
 
         $this->productModel->updateStock($id, $quantity);
+
+        Logger::audit('stock.updated', [
+            'model'    => 'Product',
+            'model_id' => $id,
+            'old'      => ['stock' => (int) $product['stock']],
+            'new'      => ['stock' => $quantity],
+        ]);
+
         $this->jsonSuccess(['stock' => $quantity], 'Stock updated.');
     }
 

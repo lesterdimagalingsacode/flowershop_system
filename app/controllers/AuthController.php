@@ -62,6 +62,12 @@ class AuthController extends Controller {
         RateLimiter::clear('login');
         Session::login($user);
 
+        Logger::audit('user.login', [
+            'model'    => 'User',
+            'model_id' => $user['id'],
+            'new'      => ['email' => $user['email'], 'role' => $user['role']],
+        ]);
+
         Logger::info('User logged in', [
             'user_id' => $user['id'],
             'email'   => $user['email'],
@@ -161,6 +167,12 @@ class AuthController extends Controller {
         // Auto-login
         Session::login($user);
 
+        Logger::audit('user.registered', [
+            'model'    => 'User',
+            'model_id' => $userId,
+            'new'      => ['email' => $validator->get('email')],
+        ]);
+
         Logger::info('New user registered', [
             'user_id' => $userId,
             'email'   => $validator->get('email'),
@@ -211,6 +223,10 @@ class AuthController extends Controller {
     // ── POST /logout ──────────────────────────
     public function logout(): void {
         $userId = Session::userId();
+        Logger::audit('user.logout', [
+            'model'    => 'User',
+            'model_id' => $userId,
+        ]);
         Logger::info('User logged out', ['user_id' => $userId]);
         Session::logout();
         $this->flashRedirect('/login', 'You have been logged out.', 'info');
@@ -268,6 +284,15 @@ class AuthController extends Controller {
         $updated = $this->userModel->findById($userId);
         Session::login($updated);
 
+        Logger::audit('user.profile_updated', [
+            'model'    => 'User',
+            'model_id' => $userId,
+            'new'      => [
+                'first_name' => $validator->get('first_name'),
+                'last_name'  => $validator->get('last_name'),
+            ],
+        ]);
+
         $this->flashRedirect('/profile', 'Profile updated successfully! ✅');
     }
 
@@ -306,6 +331,130 @@ class AuthController extends Controller {
 
         $this->userModel->updatePassword($userId, $this->post('new_password'));
 
+        Logger::audit('password.changed', [
+            'model'    => 'User',
+            'model_id' => $userId,
+        ]);
+
         $this->flashRedirect('/profile', 'Password changed successfully! 🔒');
+    }
+
+    public function forgotPasswordForm(): void
+    {
+        $this->view('auth/forgot-password', [], 'main');
+    }
+ 
+// ── POST /forgot-password ─────────────────────────────────────────────────
+    public function forgotPassword(): void
+    {
+        CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
+            ?: $this->flashRedirect('/forgot-password', 'Invalid request. Please try again.', 'error');
+    
+        $email = trim(strtolower($this->post('email', '')));
+    
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->flashRedirect('/forgot-password', 'Please enter a valid email address.', 'error');
+            return;
+        }
+    
+        // Always show success — never leak whether the email exists
+        $user = $this->userModel->findByEmail($email);
+    
+        if ($user) {
+            $token     = bin2hex(random_bytes(32));           // 64-char hex token
+            $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 60 minutes
+    
+            $this->userModel->setResetToken((int) $user['id'], $token, $expiresAt);
+    
+            $resetLink = APP_URL . '/reset-password?token=' . $token;
+    
+            $mailer = new Mailer();
+            $mailer->send(
+                $user['email'],
+                $user['name'],
+                'Reset your Petal & Soul password',
+                'emails/reset-password',
+                [
+                    'name' => $user['first_name'],
+                    'link' => $resetLink,
+                ]
+            );
+    
+            Logger::info('Password reset email sent', ['user_id' => $user['id'], 'email' => $user['email']]);
+        }
+    
+        // Same message regardless — prevents email enumeration
+        Session::flash('message', 'If that email is registered, you\'ll receive a reset link shortly.');
+        $this->redirect('/forgot-password');
+    }
+    
+    // ── GET /reset-password?token=xxx ────────────────────────────────────────
+    public function resetPasswordForm(): void
+    {
+        $token = trim($_GET['token'] ?? '');
+    
+        if (!$token) {
+            $this->flashRedirect('/forgot-password', 'Invalid or missing reset link.', 'error');
+            return;
+        }
+    
+        $user = $this->userModel->findByResetToken($token);
+    
+        if (!$user) {
+            $this->flashRedirect('/forgot-password', 'This reset link has expired or already been used. Please request a new one.', 'error');
+            return;
+        }
+    
+        $this->view('auth/reset-password', ['token' => $token], 'main');
+    }
+    
+    // ── POST /reset-password ──────────────────────────────────────────────────
+    public function resetPassword(): void
+    {
+        CSRFMiddleware::verify($this->post(CSRF_TOKEN_NAME, ''))
+            ?: $this->flashRedirect('/forgot-password', 'Invalid request. Please try again.', 'error');
+    
+        $token    = trim($this->post('token', ''));
+        $password = $this->post('password', '');
+        $confirm  = $this->post('password_confirmation', '');
+    
+        if (!$token) {
+            $this->flashRedirect('/forgot-password', 'Invalid reset link.', 'error');
+            return;
+        }
+    
+        $user = $this->userModel->findByResetToken($token);
+    
+        if (!$user) {
+            $this->flashRedirect('/forgot-password', 'This reset link has expired or already been used. Please request a new one.', 'error');
+            return;
+        }
+    
+        if ($password !== $confirm) {
+            Session::flash('error', 'Passwords do not match.');
+            $this->redirect('/reset-password?token=' . urlencode($token));
+            return;
+        }
+    
+        $validator = Validator::make(
+            ['password' => $password],
+            ['password' => 'required|strong_password|max:255']
+        );
+    
+        if ($validator->fails()) {
+            Session::flash('error', implode(' ', array_merge(...array_values($validator->errors()))));
+            $this->redirect('/reset-password?token=' . urlencode($token));
+            return;
+        }
+    
+        $this->userModel->updatePassword((int) $user['id'], $password);
+        $this->userModel->clearResetToken((int) $user['id']);
+    
+        Logger::audit('password.reset', [
+            'model'    => 'User',
+            'model_id' => $user['id'],
+        ]);
+    
+        $this->flashRedirect('/login', '🔒 Password reset successfully! You can now log in with your new password.');
     }
 }

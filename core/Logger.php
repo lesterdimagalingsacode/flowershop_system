@@ -25,14 +25,25 @@ class Logger {
         try {
             $db     = Database::getInstance();
             $userId = Session::userId();
+
+            $model    = $context['model']     ?? null;
+            $modelId  = $context['model_id']  ?? null;
+            $oldVals  = isset($context['old']) ? json_encode($context['old']) : null;
+            $newVals  = isset($context['new']) ? json_encode($context['new']) : null;
+
             $db->execute(
-                "INSERT INTO audit_logs (user_id, action, context, ip_address, created_at)
-                 VALUES (?, ?, ?, ?, NOW())",
+                "INSERT INTO audit_logs 
+                    (user_id, action, model, model_id, old_values, new_values, ip_address, user_agent, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())",
                 [
                     $userId,
                     $action,
-                    json_encode($context),
-                    $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+                    $model,
+                    $modelId,
+                    $oldVals,
+                    $newVals,
+                    $_SERVER['REMOTE_ADDR']     ?? 'unknown',
+                    $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
                 ]
             );
         } catch (Throwable) {

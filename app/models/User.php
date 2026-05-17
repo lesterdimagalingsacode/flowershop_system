@@ -82,7 +82,6 @@ class User {
 
         $users = $db->query($sql, $params);
 
-        // Append computed full name so views can use $user['name']
         return array_map(function(array $u): array {
             $parts    = array_filter([$u['first_name'] ?? '', $u['middle_name'] ?? '', $u['last_name'] ?? '']);
             $u['name'] = implode(' ', $parts);
@@ -245,7 +244,6 @@ class User {
         $params     = [];
 
         if (! empty($filters['search'])) {
-            // Search across actual columns — no virtual 'name' column
             $conditions[] = "(first_name LIKE :search OR last_name LIKE :search OR email LIKE :search)";
             $params[':search'] = '%' . $filters['search'] . '%';
         }
@@ -267,7 +265,7 @@ class User {
         return [$where, $params];
     }
 
-    // ── Email Verification ────────────────────────
+    // ── Email Verification ────────────────────
     public function setVerificationToken(int $id, string $token): void {
         $this->db->execute(
             "UPDATE users SET verification_token = ?, updated_at = NOW() WHERE id = ?",
@@ -295,5 +293,35 @@ class User {
             [$id]
         );
         return !empty($row['email_verified_at']);
+    }
+
+    // ── Password Reset ────────────────────────
+    public function setResetToken(int $id, string $token, string $expiresAt): void {
+        $this->db->execute(
+            "UPDATE users
+             SET reset_token = ?, reset_token_expires_at = ?, updated_at = NOW()
+             WHERE id = ?",
+            [$token, $expiresAt, $id]
+        );
+    }
+
+    public function findByResetToken(string $token): array|false {
+        return $this->db->queryOne(
+            "SELECT * FROM users
+             WHERE reset_token = ?
+               AND reset_token_expires_at > NOW()
+               AND deleted_at IS NULL
+             LIMIT 1",
+            [$token]
+        );
+    }
+
+    public function clearResetToken(int $id): void {
+        $this->db->execute(
+            "UPDATE users
+             SET reset_token = NULL, reset_token_expires_at = NULL, updated_at = NOW()
+             WHERE id = ?",
+            [$id]
+        );
     }
 }

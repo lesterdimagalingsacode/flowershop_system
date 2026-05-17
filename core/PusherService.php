@@ -9,6 +9,10 @@ class PusherService
 {
     private static ?\Pusher\Pusher $instance = null;
 
+    /** Queued events to fire after response is sent */
+    private static array $queue = [];
+    private static bool  $shutdownRegistered = false;
+
     private static function client(): ?\Pusher\Pusher
     {
         if (self::$instance) return self::$instance;
@@ -34,20 +38,54 @@ class PusherService
         return self::$instance;
     }
 
-    // ── Generic trigger ───────────────────────
+    // ── Generic trigger (non-blocking) ───────────────────────────────────────
+    // Events are queued and fired after PHP sends the HTTP response to the
+    // browser. This means add-to-cart, checkout, etc. are never held up
+    // waiting for Pusher's API round-trip over the internet.
     public static function trigger(string $channel, string $event, array $data): void
     {
-        try {
-            $pusher = self::client();
-            if (!$pusher) return;
-            $pusher->trigger($channel, $event, $data);
-        } catch (\Throwable $e) {
-            error_log('[Pusher] Failed to trigger: ' . $e->getMessage());
+        // Queue the event
+        self::$queue[] = compact('channel', 'event', 'data');
+
+        // Register the shutdown handler only once
+        if (!self::$shutdownRegistered) {
+            self::$shutdownRegistered = true;
+
+            register_shutdown_function(function () {
+                // Flush output to browser first so the user isn't waiting
+                if (function_exists('fastcgi_finish_request')) {
+                    // FPM: sends response immediately, script keeps running
+                    fastcgi_finish_request();
+                } else {
+                    // Non-FPM: close the connection and continue
+                    if (!headers_sent()) {
+                        header('Connection: close');
+                        header('Content-Encoding: none');
+                    }
+                    $size = ob_get_length();
+                    if ($size !== false) {
+                        header('Content-Length: ' . $size);
+                    }
+                    ob_end_flush();
+                    flush();
+                }
+
+                // Now fire all queued Pusher events — browser already has its response
+                $pusher = self::client();
+                if (!$pusher) return;
+
+                foreach (self::$queue as $item) {
+                    try {
+                        $pusher->trigger($item['channel'], $item['event'], $item['data']);
+                    } catch (\Throwable $e) {
+                        error_log('[Pusher] Failed to trigger: ' . $e->getMessage());
+                    }
+                }
+            });
         }
     }
 
     // ── Cart updated (per user) ───────────────
-    // Fired after any cart add/update/remove
     public static function cartUpdated(int $userId, int $cartCount): void
     {
         self::trigger('private-cart.' . $userId, 'cart-updated', [
@@ -56,7 +94,6 @@ class PusherService
     }
 
     // ── New order placed ──────────────────────
-    // Fired after customer successfully checks out
     public static function newOrder(array $order): void
     {
         self::trigger('private-admin', 'new-order', [
@@ -64,21 +101,29 @@ class PusherService
             'order_number' => $order['order_number'],
             'total_amount' => $order['total_amount'],
             'customer'     => $order['customer_name'] ?? 'Customer',
+            'order_status' => $order['status'] ?? 'confirmed',
         ]);
     }
 
     // ── Order status changed ──────────────────
-    // Fired when admin updates order status
     public static function orderStatusChanged(array $order, string $newStatus): void
     {
-        // Notify the customer
+        // Notify customer on order detail page
         self::trigger('private-order.' . $order['id'], 'status-changed', [
             'order_id'   => $order['id'],
             'new_status' => $newStatus,
             'label'      => ucfirst(str_replace('_', ' ', $newStatus)),
         ]);
 
-        // Also notify admin channel so dashboard can refresh
+        // Notify customer on any page
+        self::trigger('private-user.' . $order['user_id'], 'order-status-changed', [
+            'order_id'     => $order['id'],
+            'order_number' => $order['order_number'],
+            'new_status'   => $newStatus,
+            'label'        => ucfirst(str_replace('_', ' ', $newStatus)),
+        ]);
+
+        // Notify admin channel
         self::trigger('private-admin', 'order-status-changed', [
             'order_id'   => $order['id'],
             'new_status' => $newStatus,

@@ -1,0 +1,258 @@
+05:24:15 {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\nPlease retry in 43.16828117s.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Learn more about Gemini API quotas",
+            "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.QuotaFailure",
+        "violations": [
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count",
+            "quotaId": "GenerateContentInputTokensPerModelPerMinute-FreeTier",
+            "quotaDimensions": {
+              "model": "gemini-2.0-flash-lite",
+              "location": "global"
+            }
+          },
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
+            "quotaDimensions": {
+              "location": "global",
+              "model": "gemini-2.0-flash-lite"
+            }
+          },
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+            "quotaDimensions": {
+              "location": "global",
+              "model": "gemini-2.0-flash-lite"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.RetryInfo",
+        "retryDelay": "43s"
+      }
+    ]
+  }
+}
+
+
+05:29:59 {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 59.587032341s.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Learn more about Gemini API quotas",
+            "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.QuotaFailure",
+        "violations": [
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+            "quotaDimensions": {
+              "model": "gemini-2.0-flash",
+              "location": "global"
+            }
+          },
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
+            "quotaDimensions": {
+              "location": "global",
+              "model": "gemini-2.0-flash"
+            }
+          },
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count",
+            "quotaId": "GenerateContentInputTokensPerModelPerMinute-FreeTier",
+            "quotaDimensions": {
+              "location": "global",
+              "model": "gemini-2.0-flash"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.RetryInfo",
+        "retryDelay": "59s"
+      }
+    ]
+  }
+}
+
+
+05:33:43 {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 15.851048011s.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Learn more about Gemini API quotas",
+            "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.QuotaFailure",
+        "violations": [
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count",
+            "quotaId": "GenerateContentInputTokensPerModelPerMinute-FreeTier",
+            "quotaDimensions": {
+              "model": "gemini-2.0-flash",
+              "location": "global"
+            }
+          },
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
+            "quotaDimensions": {
+              "model": "gemini-2.0-flash",
+              "location": "global"
+            }
+          },
+          {
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+            "quotaDimensions": {
+              "location": "global",
+              "model": "gemini-2.0-flash"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.RetryInfo",
+        "retryDelay": "15s"
+      }
+    ]
+  }
+}
+
+
+05:37:20 {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "[SHOW_PRODUCTS]"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 914,
+    "candidatesTokenCount": 5,
+    "totalTokenCount": 959,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 914
+      }
+    ],
+    "thoughtsTokenCount": 40,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "kEAGasTVIKKR4-EPhtzT4Ao"
+}
+
+
+05:39:10 {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Hello there, Kim Lester! 🌸 We'd be happy to help you with your client's wedding flower needs. For white flowers, we have our beautiful **White Rose Elegance** bouquet for ₱699.00. It's a classic and elegant choice perfect for weddings!"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 955,
+    "candidatesTokenCount": 62,
+    "totalTokenCount": 1126,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 955
+      }
+    ],
+    "thoughtsTokenCount": 109,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "_UAGavjFKOXjjuMPq5PwwAo"
+}
+
+
+05:41:04 {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "[SHOW_ORDERS]"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 956,
+    "candidatesTokenCount": 5,
+    "totalTokenCount": 1004,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 956
+      }
+    ],
+    "thoughtsTokenCount": 43,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "b0EGasvMM73FjuMPt4OK6QQ"
+}
+
+

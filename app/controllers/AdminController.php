@@ -66,6 +66,15 @@ class AdminController extends Controller {
         $updated = User::updateField($userId, 'role', $newRole);
 
         if ($updated) {
+            // ── NEW ───────────────────────────────────
+            Logger::audit('user.role_changed', [
+                'model'    => 'User',
+                'model_id' => $userId,
+                'old'      => ['role' => $user['role']],
+                'new'      => ['role' => $newRole],
+            ]);
+            // ─────────────────────────────────────────
+
             $this->jsonSuccess(['role' => $newRole], 'Role updated successfully.');
         } else {
             $this->jsonError('Failed to update role.');
@@ -101,6 +110,16 @@ class AdminController extends Controller {
 
         if ($updated) {
             $label = $newStatus ? 'activated' : 'deactivated';
+
+            // ── NEW ───────────────────────────────────
+            Logger::audit('user.toggled', [
+                'model'    => 'User',
+                'model_id' => $userId,
+                'old'      => ['is_active' => $user['is_active']],
+                'new'      => ['is_active' => $newStatus],
+            ]);
+            // ─────────────────────────────────────────
+
             $this->jsonSuccess(['is_active' => $newStatus], "User {$label} successfully.");
         } else {
             $this->jsonError('Failed to update status.');
@@ -134,6 +153,14 @@ class AdminController extends Controller {
         $deleted = User::softDelete($userId);
 
         if ($deleted) {
+            // ── NEW ───────────────────────────────────
+            Logger::audit('user.deleted', [
+                'model'    => 'User',
+                'model_id' => $userId,
+                'old'      => ['email' => $user['email'], 'role' => $user['role']],
+            ]);
+            // ─────────────────────────────────────────
+
             $this->jsonSuccess([], 'User deleted successfully.');
         } else {
             $this->jsonError('Failed to delete user.');

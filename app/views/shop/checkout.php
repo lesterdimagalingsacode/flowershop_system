@@ -18,6 +18,10 @@
 
             <input type="hidden" name="payment_method_id" id="paymentMethodId">
 
+            <!-- Hidden promo fields — populated by JS on successful apply -->
+            <input type="hidden" name="promo_code"     id="promoCodeHidden"    value="">
+            <input type="hidden" name="promo_discount" id="promoDiscountHidden" value="0">
+
             <div class="flex gap-8 flex-col lg:flex-row">
 
                 <!-- Left — Delivery details -->
@@ -163,6 +167,7 @@
                     <div class="bg-white border border-border rounded-2xl p-6">
                         <h2 class="text-xl text-text mb-5" style="font-family: var(--font-display);">Your Order</h2>
 
+                        <!-- Cart items -->
                         <div class="space-y-3 mb-5">
                             <?php foreach ($cart as $item): ?>
                             <div class="flex items-center gap-3">
@@ -186,6 +191,42 @@
                             <?php endforeach; ?>
                         </div>
 
+                        <!-- ── Promo Code ── -->
+                        <div class="pt-4 border-t border-border mb-4">
+                            <label class="block text-xs font-medium text-text tracking-widest uppercase mb-2">
+                                Promo Code
+                            </label>
+                            <div class="flex gap-2">
+                                <input
+                                    type="text"
+                                    id="promoInput"
+                                    placeholder="e.g. SUMMER20"
+                                    maxlength="50"
+                                    autocomplete="off"
+                                    class="flex-1 min-w-0 bg-white border border-border rounded-xl px-3 py-2.5 text-sm uppercase tracking-widest font-mono placeholder-muted placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/20 transition"
+                                >
+                                <button
+                                    type="button"
+                                    id="applyPromoBtn"
+                                    class="flex-shrink-0 bg-forest hover:bg-pine text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:-translate-y-px"
+                                >
+                                    Apply
+                                </button>
+                            </div>
+                            <!-- Status message -->
+                            <p id="promoMsg" class="hidden text-xs mt-1.5"></p>
+                            <!-- Applied badge — shown after successful apply -->
+                            <div id="promoBadge" class="hidden mt-2 flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-3 py-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-green-600 text-sm">🏷️</span>
+                                    <span id="promoBadgeCode" class="text-xs font-mono font-bold text-green-700 tracking-widest"></span>
+                                    <span class="text-xs text-green-600">applied</span>
+                                </div>
+                                <button type="button" id="removePromoBtn" class="text-xs text-green-500 hover:text-red-500 transition font-medium ml-2">✕</button>
+                            </div>
+                        </div>
+
+                        <!-- Totals -->
                         <div class="space-y-2 pt-4 border-t border-border mb-5">
                             <div class="flex justify-between text-sm">
                                 <span class="text-muted">Subtotal</span>
@@ -195,9 +236,14 @@
                                 <span class="text-muted">Delivery</span>
                                 <span class="text-text"><?= $delivery > 0 ? '₱' . number_format($delivery, 2) : 'Free' ?></span>
                             </div>
+                            <!-- Discount row — hidden until promo applied -->
+                            <div id="discountRow" class="hidden flex justify-between text-sm">
+                                <span class="text-green-600">Discount</span>
+                                <span id="discountAmt" class="text-green-600 font-medium"></span>
+                            </div>
                             <div class="flex justify-between pt-2 border-t border-border">
                                 <span class="font-semibold text-text">Total</span>
-                                <span class="font-bold text-forest text-lg">₱<?= number_format($total, 2) ?></span>
+                                <span id="totalDisplay" class="font-bold text-forest text-lg">₱<?= number_format($total, 2) ?></span>
                             </div>
                         </div>
 
@@ -224,14 +270,19 @@
 <script src="<?= APP_URL ?>/js/psgc.js"></script>
 <script>
 // ── PHP values passed to JS ───────────────────────────────────────────────
-const PAYMONGO_PK = <?= json_encode(base64_encode(PAYMONGO_PUBLIC_KEY . ':')) ?>;
-const USER_EMAIL  = <?= json_encode($user['email'] ?? '') ?>;
-const USER_PHONE  = <?= json_encode($user['phone']  ?? '') ?>;
+const PAYMONGO_PK  = <?= json_encode(base64_encode(PAYMONGO_PUBLIC_KEY . ':')) ?>;
+const USER_EMAIL   = <?= json_encode($user['email'] ?? '') ?>;
+const USER_PHONE   = <?= json_encode($user['phone']  ?? '') ?>;
+const BASE_SUBTOTAL = <?= json_encode((float) $subtotal) ?>;
+const BASE_DELIVERY = <?= json_encode((float) $delivery) ?>;
+const APP_URL_JS    = <?= json_encode(APP_URL) ?>;
+const CSRF_TOKEN    = <?= json_encode(csrf_token()) ?>;
+const CSRF_NAME     = <?= json_encode(CSRF_TOKEN_NAME) ?>;
 // ─────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const form         = document.getElementById('checkoutForm');
+    const form          = document.getElementById('checkoutForm');
     const placeOrderBtn = document.getElementById('placeOrderBtn');
 
     if (!form || !placeOrderBtn) {
@@ -261,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
         provinceName   : 'Aurora',
         regionName     : 'Region III (Central Luzon)',
         defaultMuni    : 'baler',
-        baseUrl        : '<?= APP_URL ?>',
+        baseUrl        : APP_URL_JS,
     });
 
     // ── Payment method toggle ─────────────────
@@ -286,7 +337,153 @@ document.addEventListener('DOMContentLoaded', function () {
         this.value = val;
     });
 
-    // ── Place Order button ────────────────────
+    // ═══════════════════════════════════════════
+    //  PROMO CODE
+    // ═══════════════════════════════════════════
+    const promoInput        = document.getElementById('promoInput');
+    const applyPromoBtn     = document.getElementById('applyPromoBtn');
+    const removePromoBtn    = document.getElementById('removePromoBtn');
+    const promoMsg          = document.getElementById('promoMsg');
+    const promoBadge        = document.getElementById('promoBadge');
+    const promoBadgeCode    = document.getElementById('promoBadgeCode');
+    const discountRow       = document.getElementById('discountRow');
+    const discountAmt       = document.getElementById('discountAmt');
+    const totalDisplay      = document.getElementById('totalDisplay');
+    const promoCodeHidden   = document.getElementById('promoCodeHidden');
+    const promoDiscountHid  = document.getElementById('promoDiscountHidden');
+
+    let appliedDiscount = 0;
+
+    function formatPHP(amount) {
+        return '₱' + amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function refreshTotal() {
+        const newTotal = Math.max(0, BASE_SUBTOTAL + BASE_DELIVERY - appliedDiscount);
+        totalDisplay.textContent = formatPHP(newTotal);
+    }
+
+    function setPromoMsg(text, isError) {
+        promoMsg.textContent = text;
+        promoMsg.className   = 'text-xs mt-1.5 ' + (isError ? 'text-red-500' : 'text-green-600');
+        promoMsg.classList.remove('hidden');
+    }
+
+    function clearPromoMsg() {
+        promoMsg.classList.add('hidden');
+        promoMsg.textContent = '';
+    }
+
+    function applyPromoToUI(code, discount) {
+        appliedDiscount = discount;
+
+        // Badge
+        promoBadgeCode.textContent = code;
+        promoBadge.classList.remove('hidden');
+
+        // Discount row
+        discountAmt.textContent = '−' + formatPHP(discount);
+        discountRow.classList.remove('hidden');
+
+        // Hidden fields for form submit
+        promoCodeHidden.value  = code;
+        promoDiscountHid.value = discount;
+
+        // Updated total
+        refreshTotal();
+
+        // Lock input
+        promoInput.disabled       = true;
+        applyPromoBtn.disabled    = true;
+        applyPromoBtn.textContent = 'Applied ✓';
+        applyPromoBtn.classList.remove('bg-forest', 'hover:bg-pine', 'hover:-translate-y-px');
+        applyPromoBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+
+        clearPromoMsg();
+    }
+
+    function resetPromoUI() {
+        appliedDiscount = 0;
+
+        promoBadge.classList.add('hidden');
+        discountRow.classList.add('hidden');
+        discountAmt.textContent = '';
+
+        promoCodeHidden.value  = '';
+        promoDiscountHid.value = '0';
+
+        promoInput.disabled       = false;
+        promoInput.value          = '';
+        applyPromoBtn.disabled    = false;
+        applyPromoBtn.textContent = 'Apply';
+        applyPromoBtn.classList.add('bg-forest', 'hover:bg-pine', 'hover:-translate-y-px');
+        applyPromoBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+
+        refreshTotal();
+        clearPromoMsg();
+    }
+
+    // Apply button click
+    applyPromoBtn.addEventListener('click', async function () {
+        const code = promoInput.value.trim().toUpperCase();
+
+        if (!code) {
+            setPromoMsg('Please enter a promo code.', true);
+            return;
+        }
+
+        applyPromoBtn.disabled    = true;
+        applyPromoBtn.textContent = '...';
+
+        try {
+            const body = new URLSearchParams({
+                [CSRF_NAME]: CSRF_TOKEN,
+                code       : code,
+                subtotal   : BASE_SUBTOTAL,
+            });
+
+            const res  = await fetch(APP_URL_JS + '/promo/validate', {
+                method  : 'POST',
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                body    : body.toString(),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                applyPromoToUI(data.code, data.discount);
+            } else {
+                setPromoMsg(data.message ?? 'Invalid promo code.', true);
+                applyPromoBtn.disabled    = false;
+                applyPromoBtn.textContent = 'Apply';
+            }
+
+        } catch (err) {
+            console.error('Promo validate error:', err);
+            setPromoMsg('Network error. Please try again.', true);
+            applyPromoBtn.disabled    = false;
+            applyPromoBtn.textContent = 'Apply';
+        }
+    });
+
+    // Enter key in promo input
+    promoInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); applyPromoBtn.click(); }
+    });
+
+    // Auto-uppercase as user types
+    promoInput.addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+    });
+
+    // Remove promo
+    removePromoBtn.addEventListener('click', function () {
+        resetPromoUI();
+    });
+
+    // ═══════════════════════════════════════════
+    //  PLACE ORDER
+    // ═══════════════════════════════════════════
     placeOrderBtn.addEventListener('click', async function () {
         const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
 

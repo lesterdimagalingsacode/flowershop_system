@@ -8,6 +8,7 @@
     <?= csrf_meta() ?>
 
     <link rel="stylesheet" href="<?= APP_URL ?>/css/app.css">
+		
     <style>
         .sidebar-link.active { background: var(--color-cream); color: var(--color-forest); font-weight: 600; }
         .sidebar-link.active .sidebar-icon { color: var(--color-forest); }
@@ -66,6 +67,14 @@
                 Inventory
             </a>
 
+            <a href="<?= APP_URL ?>/admin/promos"
+            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:bg-cream hover:text-forest transition-all mb-1 <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/promos') ? 'active' : '' ?>">
+                <svg class="sidebar-icon w-4 h-4 text-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 7h.01M7 3h5l9 9a2 2 0 010 2.828l-5.172 5.172a2 2 0 01-2.828 0L4 11V3h3zM7 7a1 1 0 100-2 1 1 0 000 2z"/>
+                </svg>
+                Promo Codes
+            </a>
+
             <p class="text-[0.6rem] uppercase tracking-widest text-muted px-3 mb-2 mt-4">Orders</p>
             <a href="<?= APP_URL ?>/admin/orders"
                class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:bg-cream hover:text-forest transition-all mb-1 <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/orders')) ? 'active' : '' ?>">
@@ -94,6 +103,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
                 Backup & Restore
+            </a>
+
+            <a href="<?= APP_URL ?>/admin/logs"
+            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:bg-cream hover:text-forest transition-all mb-1 <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/logs') ? 'active' : '' ?>">
+                <svg class="sidebar-icon w-4 h-4 text-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+                Activity Logs
             </a>
         </nav>
 
@@ -161,7 +178,7 @@
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-
+        
         <!-- Page content -->
         <main class="flex-1 px-8 py-6">
             <?= $content ?>
@@ -174,10 +191,11 @@
 </div>
 
 <script src="<?= APP_URL ?>/js/toast.js"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="<?= APP_URL ?>/js/app.js"></script>
 
 <!-- ── Pusher: new order notifications for admin ── -->
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
 <script>
 (function () {
     const PUSHER_KEY     = '<?= PUSHER_APP_KEY ?>';

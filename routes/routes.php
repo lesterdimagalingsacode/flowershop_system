@@ -20,6 +20,11 @@ $router->get ('/register', [AuthController::class, 'registerForm']);
 $router->post('/register', [AuthController::class, 'register']);
 $router->post('/logout',   [AuthController::class, 'logout']);
 
+$router->get ('/forgot-password', [AuthController::class, 'forgotPasswordForm']);
+$router->post('/forgot-password', [AuthController::class, 'forgotPassword']);
+$router->get ('/reset-password',  [AuthController::class, 'resetPasswordForm']);
+$router->post('/reset-password',  [AuthController::class, 'resetPassword']);
+
 $router->post('/pusher/auth', [PusherController::class, 'auth']);
 
 // ── Email Verification ────────────────────────
@@ -40,8 +45,19 @@ $router->post('/profile',          [AuthController::class, 'updateProfile']);
 $router->post('/profile/password', [AuthController::class, 'updatePassword']);
 
 $router->get ('/admin/backup',         [BackupController::class, 'index']);
-    $router->get ('/admin/backup/download', [BackupController::class, 'download']);
-    $router->post('/admin/backup/restore',  [BackupController::class, 'restore']);
+$router->get ('/admin/backup/download', [BackupController::class, 'download']);
+$router->post('/admin/backup/restore',  [BackupController::class, 'restore']);
+
+$router->get('/admin/logs', [LogController::class, 'index']);
+
+$router->get('/admin/promos',              [PromoController::class, 'index']);
+$router->get('/admin/promos/create',       [PromoController::class, 'create']);
+$router->post('/admin/promos/store',       [PromoController::class, 'store']);
+$router->get('/admin/promos/{id}/edit',    [PromoController::class, 'edit']);
+$router->post('/admin/promos/{id}/update', [PromoController::class, 'update']);
+$router->post('/admin/promos/{id}/delete', [PromoController::class, 'destroy']);
+$router->post('/promo/validate',           [PromoController::class, 'validate']);
+$router->post('/admin/promos/{id}/announce', [PromoController::class, 'announce']);
 
 // ══════════════════════════════════════════════
 //  CUSTOMER ROUTES (must be logged in)
@@ -143,6 +159,9 @@ $router->group('/admin', function(Router $router) {
     $router->get('/api/best-sellers',      [DashboardController::class, 'bestSellers']);
     $router->get('/api/status-chart',      [DashboardController::class, 'statusChart']);
 
-   
-
 });
+
+// ── Chatbot ───────────────────────────────────
+$router->post('/chatbot/message',  [ChatbotController::class, 'message']);
+$router->post('/chatbot/products', [ChatbotController::class, 'products']); // ← ADD
+$router->post('/chatbot/orders',   [ChatbotController::class, 'orders']);   // ← ADD

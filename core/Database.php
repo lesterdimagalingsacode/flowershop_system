@@ -23,11 +23,12 @@ class Database {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,   // real prepared statements
             PDO::ATTR_PERSISTENT         => false,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci; SET time_zone = '+08:00'",
         ];
 
         try {
             $this->pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+            $this->pdo->exec("SET time_zone = '+08:00'"); // ← add this
         } catch (PDOException $e) {
             // Never expose credentials in production
             $msg = APP_DEBUG

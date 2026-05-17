@@ -113,4 +113,12 @@ define('PUSHER_APP_KEY',     env('PUSHER_APP_KEY'));
 define('PUSHER_APP_SECRET',  env('PUSHER_APP_SECRET'));
 define('PUSHER_APP_CLUSTER', env('PUSHER_APP_CLUSTER', 'ap1'));
 
+//define('GEMINI_API_KEY', 'AIzaSyC2sZMBpEHBToMpBFnlCPJT1aVOl8xvH_M');
+
+define('NVIDIA_API_KEY', env('NVIDIA_API_KEY'));
+
+// NVIDIA
+//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
+
+
 // npx @tailwindcss/cli -i ./public/css/input.css -o ./public/css/app.css --watch

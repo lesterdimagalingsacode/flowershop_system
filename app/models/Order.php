@@ -79,41 +79,60 @@ class Order {
     }
 
     // ── Get all orders (admin) ────────────────
-    public function getAll(int $limit = 20, int $offset = 0, string $status = ''): array {
+    public function getAll(int $limit = 20, int $offset = 0, string $status = '', string $dateFrom = '', string $dateTo = ''): array {
+        $conditions = ["o.deleted_at IS NULL"];
+        $params     = [];
+
         if ($status) {
-            return $this->db->query(
-                "SELECT o.*, u.first_name, u.last_name
-                 FROM orders o
-                 JOIN users u ON o.user_id = u.id
-                 WHERE o.deleted_at IS NULL AND o.status = ?
-                 ORDER BY o.created_at DESC
-                 LIMIT ? OFFSET ?",
-                [$status, $limit, $offset]
-            );
+            $conditions[] = "o.status = ?";
+            $params[]     = $status;
         }
+        if ($dateFrom) {
+            $conditions[] = "DATE(o.created_at) >= ?";
+            $params[]     = $dateFrom;
+        }
+        if ($dateTo) {
+            $conditions[] = "DATE(o.created_at) <= ?";
+            $params[]     = $dateTo;
+        }
+
+        $where    = "WHERE " . implode(" AND ", $conditions);
+        $params[] = $limit;
+        $params[] = $offset;
 
         return $this->db->query(
             "SELECT o.*, u.first_name, u.last_name
              FROM orders o
              JOIN users u ON o.user_id = u.id
-             WHERE o.deleted_at IS NULL
-             ORDER BY o.created_at DESC
+             {$where}
+             ORDER BY o.created_at ASC
              LIMIT ? OFFSET ?",
-            [$limit, $offset]
+            $params
         );
     }
 
-    public function countAll(string $status = ''): int {
+    public function countAll(string $status = '', string $dateFrom = '', string $dateTo = ''): int {
+        $conditions = ["deleted_at IS NULL"];
+        $params     = [];
+
         if ($status) {
-            $row = $this->db->queryOne(
-                "SELECT COUNT(*) as total FROM orders WHERE deleted_at IS NULL AND status = ?",
-                [$status]
-            );
-        } else {
-            $row = $this->db->queryOne(
-                "SELECT COUNT(*) as total FROM orders WHERE deleted_at IS NULL"
-            );
+            $conditions[] = "status = ?";
+            $params[]     = $status;
         }
+        if ($dateFrom) {
+            $conditions[] = "DATE(created_at) >= ?";
+            $params[]     = $dateFrom;
+        }
+        if ($dateTo) {
+            $conditions[] = "DATE(created_at) <= ?";
+            $params[]     = $dateTo;
+        }
+
+        $where = "WHERE " . implode(" AND ", $conditions);
+        $row   = $this->db->queryOne(
+            "SELECT COUNT(*) as total FROM orders {$where}",
+            $params
+        );
         return (int)($row['total'] ?? 0);
     }
 

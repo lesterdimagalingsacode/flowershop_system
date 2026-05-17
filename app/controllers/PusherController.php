@@ -1,21 +1,13 @@
 <?php
 // ─────────────────────────────────────────────
 //  app/controllers/PusherController.php
-//  Authenticates private Pusher channels.
-//  Route: POST /pusher/auth
 // ─────────────────────────────────────────────
 
 declare(strict_types=1);
 
 class PusherController extends Controller {
 
-    // ── POST /pusher/auth ─────────────────────
-    // Called automatically by Pusher JS SDK when
-    // subscribing to any private-* channel.
-    // Verifies the user is logged in and is
-    // allowed to subscribe to that channel.
     public function auth(): void {
-        // Must be logged in
         if (!Session::isLoggedIn()) {
             http_response_code(403);
             echo json_encode(['error' => 'Unauthorized']);
@@ -32,26 +24,22 @@ class PusherController extends Controller {
             return;
         }
 
-        // ── Channel access rules ──────────────
-        // private-cart.{userId}   → only that user
-        // private-order.{orderId} → only the order owner
-        // private-admin           → only staff/admin
-
         $allowed = false;
 
         if ($channelName === 'private-cart.' . $userId) {
-            // Own cart channel — always allowed
+            $allowed = true;
+
+        } elseif ($channelName === 'private-user.' . $userId) {
+            // User's own global notification channel
             $allowed = true;
 
         } elseif (str_starts_with($channelName, 'private-order.')) {
-            // Order channel — check user owns this order
-            $orderId     = (int) str_replace('private-order.', '', $channelName);
-            $orderModel  = new Order();
-            $order       = $orderModel->findById($orderId);
-            $allowed     = $order && (int)$order['user_id'] === $userId;
+            $orderId    = (int) str_replace('private-order.', '', $channelName);
+            $orderModel = new Order();
+            $order      = $orderModel->findById($orderId);
+            $allowed    = $order && (int)$order['user_id'] === $userId;
 
         } elseif ($channelName === 'private-admin') {
-            // Admin channel — staff and admins only
             $allowed = Session::isStaff();
         }
 
@@ -61,9 +49,6 @@ class PusherController extends Controller {
             return;
         }
 
-        // ── Generate auth signature ───────────
-        // Pusher SDK signs the socket_id + channel_name
-        // with your app secret to prove the server approved it.
         try {
             $pusher = new \Pusher\Pusher(
                 PUSHER_APP_KEY,

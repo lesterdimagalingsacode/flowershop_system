@@ -25,17 +25,20 @@
 
         <!-- LEFT — Tulips -->
         <div class="hidden md:block w-72 lg:w-80 flex-shrink-0 -translate-y-8">
-            <img src="<?= APP_URL ?>/images/tulips.png"
-                 alt="Tulips"
-                 class="w-full object-contain mix-blend-multiply">
+            <img src="<?= APP_URL ?>/images/tulips.webp"
+             alt="Tulips"
+             width="320" height="480"
+             class="w-full object-contain mix-blend-multiply">
         </div>
 
         <!-- CENTER — Bouquet -->
         <div class="relative w-64 md:w-80 lg:w-96 rounded-3xl overflow-hidden shadow-2xl flex-shrink-0 -translate-y-4"
              style="box-shadow: 0 40px 80px rgba(30,58,47,0.3);">
-            <img src="<?= APP_URL ?>/images/Boquet.png"
-                 alt="Bouquet"
-                 class="w-full object-cover z-50">
+            <img src="<?= APP_URL ?>/images/Boquet.webp"
+             alt="Bouquet"
+             width="400" height="500"
+             fetchpriority="high"
+             class="w-full object-cover z-50">
             <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-3 flex items-center gap-3 shadow-md">
                 <span class="text-xl">🌿</span>
                 <div>
@@ -125,9 +128,10 @@
                 <!-- Image -->
                 <div class="relative overflow-hidden aspect-square">
                     <img src="<?= $imageUrl ?>"
-                         alt="<?= e($product['name']) ?>"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                         loading="lazy">
+                     alt="<?= e($product['name']) ?>"
+                     width="400" height="400"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     loading="lazy">
 
                     <!-- Category badge -->
                     <?php if ($product['category_name']): ?>

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-
+date_default_timezone_set('Asia/Manila'); // ← add this
 define('BASE_PATH', dirname(__DIR__));
 
 require_once BASE_PATH . '/config/config.php';

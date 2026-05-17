@@ -68,8 +68,7 @@ $errors  = $errors  ?? [];
             <form method="POST" action="<?= APP_URL ?>/login" class="space-y-5">
                 <?= csrf_field() ?>
 
-                <!-- Email -->
-                <div>
+                <!-- Email -->                <div>
                     <label for="email" class="block text-xs font-medium text-text tracking-widest uppercase mb-2">
                         Email Address
                     </label>

@@ -350,6 +350,22 @@ class OrderController extends Controller {
             'Order placed by customer' . ($appliedCode ? " (promo: {$appliedCode})" : '')
         );
 
+        // ── Fetch order now so order_number is available for the audit log
+        //    and reused below — replaces the duplicate findById() that was after
+        //    PusherService::cartUpdated().
+        $order = $this->orderModel->findById((int)$orderId);
+
+        Logger::audit('order.placed', [
+            'model'    => 'Order',
+            'model_id' => $orderId,
+            'new'      => [
+                'order_number'   => $order['order_number'],
+                'total_amount'   => $total,
+                'payment_method' => $paymentMethod,
+                'promo_code'     => $appliedCode,
+            ],
+        ]);
+
         // ── Remove checked-out items from cart ─
         foreach ($selectedIds as $productId) {
             $this->cartModel->remove($userId, $productId);
@@ -358,7 +374,6 @@ class OrderController extends Controller {
         $newCartCount = $this->cartModel->count($userId);
         PusherService::cartUpdated($userId, $newCartCount);
 
-        $order = $this->orderModel->findById((int)$orderId);
         $items = $this->orderItemModel->getByOrder((int)$orderId);
 
         // ── Online payment → Payment Intent flow ──
@@ -387,8 +402,6 @@ class OrderController extends Controller {
 
             // ── Payment succeeded immediately (no 3DS) ──
             if ($result['status'] === 'paid') {
-                PusherService::newOrder($order);
-                PusherService::orderStatusChanged($order, 'confirmed');
                 $items = $this->orderItemModel->getByOrder((int)$orderId);
                 $this->sendOrderConfirmationEmail($order, $items);
                 $this->redirect('/payment/success?order=' . urlencode($order['order_number']));
@@ -466,6 +479,12 @@ class OrderController extends Controller {
         $success = $this->orderModel->cancel($orderId, Session::userId());
 
         if ($success) {
+            Logger::audit('order.cancelled', [
+                'model'    => 'Order',
+                'model_id' => $orderId,
+                'new'      => ['status' => 'cancelled'],
+            ]);
+
             Session::flash('message', 'Order cancelled successfully.', 'success');
         } else {
             Session::flash('message', 'Unable to cancel this order.', 'error');
@@ -481,13 +500,15 @@ class OrderController extends Controller {
     public function adminIndex(): void {
         $this->requireStaff();
 
-        $status  = $this->get('status', '');
-        $page    = max(1, (int) $this->get('page', 1));
-        $perPage = 20;
-        $offset  = ($page - 1) * $perPage;
+        $status    = $this->get('status', '');
+        $dateFrom  = $this->get('date_from', '');
+        $dateTo    = $this->get('date_to', '');
+        $page      = max(1, (int) $this->get('page', 1));
+        $perPage   = 20;
+        $offset    = ($page - 1) * $perPage;
 
-        $orders     = $this->orderModel->getAll($perPage, $offset, $status);
-        $total      = $this->orderModel->countAll($status);
+        $orders     = $this->orderModel->getAll($perPage, $offset, $status, $dateFrom, $dateTo);
+        $total      = $this->orderModel->countAll($status, $dateFrom, $dateTo);
         $totalPages = (int) ceil($total / $perPage);
 
         $this->view('admin/orders', [
@@ -497,6 +518,8 @@ class OrderController extends Controller {
             'page'       => $page,
             'totalPages' => $totalPages,
             'status'     => $status,
+            'dateFrom'   => $dateFrom,
+            'dateTo'     => $dateTo,
         ], 'admin');
     }
 
@@ -574,6 +597,13 @@ class OrderController extends Controller {
         $success = $this->orderModel->updateStatus($orderId, $newStatus, Session::userId(), $notes);
 
         if ($success) {
+            // ── Audit log ─────────────────────────────
+            Logger::audit('order.status_updated', [
+                'model'    => 'Order',
+                'model_id' => $orderId,
+                'old'      => ['status' => $current],
+                'new'      => ['status' => $newStatus],
+            ]);
             // ── Pusher: notify customer of status change ──
             PusherService::orderStatusChanged($order, $newStatus);
 

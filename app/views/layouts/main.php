@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Petal & Soul — Fresh handpicked flower arrangements delivered to your door. Shop bouquets, tulips, and more.">
     <title><?= isset($title) ? e($title) . ' — ' : '' ?>Petal & Soul</title>
 
     <?= csrf_meta() ?>
@@ -163,8 +164,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="<?= APP_URL ?>/js/toast.js"></script>
-    <script src="<?= APP_URL ?>/js/app.js"></script>
+   	<script src="<?= APP_URL ?>/js/toast.js" defer></script>
+	<script src="<?= APP_URL ?>/js/app.js" defer></script>
 
     <?php if (Session::isLoggedIn()): ?>
     <!-- ── Pusher: real-time cart + order sync ── -->
@@ -180,7 +181,7 @@
 
         const pusher = new Pusher(PUSHER_KEY, {
             cluster: PUSHER_CLUSTER,
-            authEndpoint: '<?= APP_URL ?>/pusher/auth',  // ← add this
+            authEndpoint: '<?= APP_URL ?>/pusher/auth',
             auth: {
                 headers: {
                     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content ?? ''
@@ -188,7 +189,7 @@
             }
         });
 
-        // ── Cart sync (private channel per user) ──
+        // ── Cart sync ──────────────────────────────
         const cartChannel = pusher.subscribe('private-cart.' + USER_ID);
 
         cartChannel.bind('pusher:subscription_error', () => {
@@ -208,31 +209,52 @@
             });
         });
 
-        // ── Order status sync (if on order detail page) ──
+        // ── Global order status toasts (any page) ──
+        const userChannel = pusher.subscribe('private-user.' + USER_ID);
+
+        userChannel.bind('order-status-changed', function (data) {
+            const messages = {
+                confirmed:  '✅ Your order #' + data.order_number + ' has been confirmed!',
+                processing: '🌸 Your order #' + data.order_number + ' is being prepared.',
+                ready:      '🚚 Your order #' + data.order_number + ' is ready for delivery!',
+                delivered:  '🎉 Your order #' + data.order_number + ' has been delivered!',
+                cancelled:  '❌ Your order #' + data.order_number + ' was cancelled.',
+            };
+
+            const toastTypes = {
+                confirmed:  'success',
+                processing: 'info',
+                ready:      'info',
+                delivered:  'success',
+                cancelled:  'error',
+            };
+
+            const msg       = messages[data.new_status] ?? ('Order #' + data.order_number + ' updated to: ' + data.label);
+            const toastType = toastTypes[data.new_status] ?? 'info';
+            Toast[toastType](msg, 6000);
+
+            // If already on that order's detail page, reload to refresh timeline
+            if (ORDER_ID && ORDER_ID === data.order_id) {
+                setTimeout(function () { window.location.reload(); }, 2500);
+            }
+        });
+
+        // ── Order status sync (order detail page only) ──
         if (ORDER_ID) {
             const orderChannel = pusher.subscribe('private-order.' + ORDER_ID);
 
             orderChannel.bind('status-changed', function (data) {
-                // Update status badge if element exists
                 const badge = document.getElementById('order-status-badge');
                 if (badge) {
                     badge.textContent = data.label;
                 }
-
-                // Show toast notification
-                if (typeof Toast !== 'undefined') {
-                    Toast.info('Order status updated to: ' + data.label);
-                }
-
-                // Reload after short delay so timeline refreshes
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
+                // Reload handled by userChannel above — no duplicate reload needed
             });
         }
+
     })();
     </script>
     <?php endif; ?>
-
+    <?php include VIEW_PATH . '/partials/chatbot.php'; ?>
 </body>
 </html>

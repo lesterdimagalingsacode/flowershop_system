@@ -10,12 +10,6 @@
 //      $retryTotal       = $order['total_amount'];
 //      include __DIR__ . '/../partials/retry_payment_modal.php';
 //    ?>
-//
-//  Then add the trigger button wherever you need it:
-//    <button onclick="RetryModal.open()">Retry Payment</button>
-// ─────────────────────────────────────────────────────────────────────────────
-?>
-
 <!-- ── Retry Payment Modal ───────────────────────────────────────────────── -->
 <div id="retryModal"
      class="fixed inset-0 z-50 hidden items-center justify-center p-4"

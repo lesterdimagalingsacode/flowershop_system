@@ -116,16 +116,14 @@ class Router {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $uri = rawurldecode($uri);
 
-        // Get base path from the project root, not public/
-        // SCRIPT_NAME = /flowershop_system/public/index.php
-        // We want base = /flowershop_system
-        $scriptDir = dirname(dirname($_SERVER['SCRIPT_NAME']));
+        // Derive base path from APP_URL (works on both ngrok and InfinityFree)
+        $basePath = rtrim(parse_url(APP_URL, PHP_URL_PATH) ?? '', '/');
 
-        if ($scriptDir !== '/' && str_starts_with($uri, $scriptDir)) {
-            $uri = substr($uri, strlen($scriptDir));
+        if ($basePath !== '' && str_starts_with($uri, $basePath)) {
+            $uri = substr($uri, strlen($basePath));
         }
 
-        return '/' . trim($uri, '/');
+        return '/' . ltrim($uri, '/');
     }
 
     /**

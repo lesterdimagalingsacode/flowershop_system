@@ -167,7 +167,6 @@
                 <p class="text-xs text-muted text-center">
                     Your order is saved. Complete payment to confirm it.
                 </p>
-                <?php endif; ?>
 
                 <?php
                 $retryOrderId     = $order['id'];
@@ -175,6 +174,7 @@
                 $retryTotal       = $order['total_amount'];
                 include __DIR__ . '/../partials/retry_payment_modal.php';
                 ?>
+                <?php endif; ?>
 
                 <!-- Cancel button -->
                 <?php if (in_array($order['status'], ['pending', 'confirmed'])): ?>

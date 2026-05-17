@@ -862,3 +862,205 @@
 [2026-05-11 20:36:43] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
 [2026-05-11 20:46:39] [INFO] [user:2] [::1] User logged out | {"user_id":2}
 [2026-05-11 20:46:55] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-13 11:20:26] [INFO] [user:10] [::1] User logged in | {"user_id":10,"email":"lumibaokimlester@gmail.com","role":"customer"}
+[2026-05-13 11:20:40] [INFO] [user:10] [::1] User logged out | {"user_id":10}
+[2026-05-13 11:20:45] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-13 11:21:41] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-13 12:56:25] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-13 16:37:33] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-13 16:38:30] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-13 17:10:58] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-13 20:45:02] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-14 11:20:31] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-14 11:20:42] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-14 11:20:48] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[14-May-2026 11:27:15 Europe/Berlin] [Mailer] PHPMailer error: SMTP Error: data not accepted.
+[2026-05-14 12:28:29] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-14 12:28:29] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-14 16:38:08] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-14 16:38:08] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[14-May-2026 16:38:43 Europe/Berlin] [Mailer] PHPMailer error: SMTP Error: data not accepted.
+[2026-05-14 23:15:33] [AUDIT] [user:2] [::1] user.logout | {"model":"User","model_id":2}
+[2026-05-14 23:15:33] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-14 23:16:43] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-14 23:16:43] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-15 00:57:41] [AUDIT] [user:1] [::1] user.logout | {"model":"User","model_id":1}
+[2026-05-15 00:57:42] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-15 00:57:49] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-15 00:57:49] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-15 03:56:14] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-15 03:56:14] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-15 06:03:44] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-15 06:03:44] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-15 13:40:36] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-15 13:40:36] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-15 15:44:55] [AUDIT] [user:10] [::1] user.login | {"model":"User","model_id":10,"new":{"email":"lumibaokimlester@gmail.com","role":"customer"}}
+[2026-05-15 15:44:56] [INFO] [user:10] [::1] User logged in | {"user_id":10,"email":"lumibaokimlester@gmail.com","role":"customer"}
+[2026-05-15 15:46:44] [AUDIT] [user:10] [::1] user.logout | {"model":"User","model_id":10}
+[2026-05-15 15:46:44] [INFO] [user:10] [::1] User logged out | {"user_id":10}
+[2026-05-15 15:46:51] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-15 15:46:51] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-15 15:51:31] [AUDIT] [user:2] [::1] user.logout | {"model":"User","model_id":2}
+[2026-05-15 15:51:31] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-15 15:51:35] [AUDIT] [user:10] [::1] user.login | {"model":"User","model_id":10,"new":{"email":"lumibaokimlester@gmail.com","role":"customer"}}
+[2026-05-15 15:51:35] [INFO] [user:10] [::1] User logged in | {"user_id":10,"email":"lumibaokimlester@gmail.com","role":"customer"}
+[2026-05-15 15:53:21] [AUDIT] [user:2] [::1] user.logout | {"model":"User","model_id":2}
+[2026-05-15 15:53:21] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-15 15:53:49] [AUDIT] [user:10] [::1] user.logout | {"model":"User","model_id":10}
+[2026-05-15 15:53:49] [INFO] [user:10] [::1] User logged out | {"user_id":10}
+[2026-05-15 15:54:05] [AUDIT] [user:10] [::1] user.login | {"model":"User","model_id":10,"new":{"email":"lumibaokimlester@gmail.com","role":"customer"}}
+[2026-05-15 15:54:05] [INFO] [user:10] [::1] User logged in | {"user_id":10,"email":"lumibaokimlester@gmail.com","role":"customer"}
+[2026-05-15 15:54:14] [AUDIT] [user:10] [::1] user.logout | {"model":"User","model_id":10}
+[2026-05-15 15:54:14] [INFO] [user:10] [::1] User logged out | {"user_id":10}
+[2026-05-15 15:54:36] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-15 15:54:36] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-15 15:55:31] [AUDIT] [user:10] [::1] user.login | {"model":"User","model_id":10,"new":{"email":"lumibaokimlester@gmail.com","role":"customer"}}
+[2026-05-15 15:55:31] [INFO] [user:10] [::1] User logged in | {"user_id":10,"email":"lumibaokimlester@gmail.com","role":"customer"}
+[2026-05-15 17:25:40] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/promo-form.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\PromoController.php(44): Controller->view('admin/promo-for...', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(181): PromoController->create(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-15 17:26:16] [ERROR] [user:1] [::1] Uncaught RuntimeException: View not found: C:\xampps\htdocs\flowershop_system/app/views/admin/promo-form.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:17
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\PromoController.php(44): Controller->view('admin/promo-for...', Array, 'admin')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(181): PromoController->create(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-16 22:10:46] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-16 22:10:46] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-17 02:43:47] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-17 02:43:47] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-17 02:51:16] [ERROR] [user:1] [::1] PHP Error [2]: Undefined variable $promo in C:\xampps\htdocs\flowershop_system\app\views\admin\promos.php on line 4
+[2026-05-17 02:51:16] [ERROR] [user:1] [::1] Uncaught ErrorException: Undefined variable $promo in C:\xampps\htdocs\flowershop_system\app\views\admin\promos.php:4
+#0 C:\xampps\htdocs\flowershop_system\app\views\admin\promos.php(4): ErrorHandler::handleError(2, 'Undefined varia...', 'C:\\xampps\\htdoc...', 4)
+#1 C:\xampps\htdocs\flowershop_system\core\Controller.php(19): require('C:\\xampps\\htdoc...')
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\PromoController.php(32): Controller->view('admin/promos', Array, 'admin')
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(181): PromoController->index(Array)
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 02:59:26] [AUDIT] [user:1] [::1] user.login | {"model":"User","model_id":1,"new":{"email":"petalsouladmin@gmail.com","role":"admin"}}
+[2026-05-17 02:59:26] [INFO] [user:1] [::1] User logged in | {"user_id":1,"email":"petalsouladmin@gmail.com","role":"admin"}
+[2026-05-17 02:59:34] [AUDIT] [user:1] [::1] user.logout | {"model":"User","model_id":1}
+[2026-05-17 02:59:34] [INFO] [user:1] [::1] User logged out | {"user_id":1}
+[2026-05-17 02:59:42] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-17 02:59:42] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-17 03:00:34] [AUDIT] [user:2] [::1] order.placed | {"model":"Order","model_id":"68","new":{"order_number":"PS-21E124-20260517","total_amount":399,"payment_method":"cod","promo_code":null}}
+[2026-05-17 03:03:49] [AUDIT] [user:1] [::1] order.status_updated | {"model":"Order","model_id":68,"old":{"status":"pending"},"new":{"status":"confirmed"}}
+[2026-05-17 03:04:02] [AUDIT] [user:1] [::1] order.status_updated | {"model":"Order","model_id":68,"old":{"status":"confirmed"},"new":{"status":"processing"}}
+[2026-05-17 03:04:17] [AUDIT] [user:1] [::1] order.status_updated | {"model":"Order","model_id":68,"old":{"status":"processing"},"new":{"status":"ready"}}
+[2026-05-17 03:04:27] [AUDIT] [user:1] [::1] order.status_updated | {"model":"Order","model_id":68,"old":{"status":"ready"},"new":{"status":"delivered"}}
+[2026-05-17 03:13:43] [AUDIT] [user:2] [::1] user.logout | {"model":"User","model_id":2}
+[2026-05-17 03:13:43] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-17 03:15:23] [ERROR] [guest] [::1] Uncaught RuntimeException: Layout not found: C:\xampps\htdocs\flowershop_system/app/views/layouts/guest.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:25
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(344): Controller->view('auth/forgot-pas...', Array, 'guest')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(181): AuthController->forgotPasswordForm(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-17 03:16:11] [ERROR] [guest] [::1] Uncaught RuntimeException: Layout not found: C:\xampps\htdocs\flowershop_system/app/views/layouts/guest.php in C:\xampps\htdocs\flowershop_system\core\Controller.php:25
+#0 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(344): Controller->view('auth/forgot-pas...', Array, 'guest')
+#1 C:\xampps\htdocs\flowershop_system\core\Router.php(181): AuthController->forgotPasswordForm(Array)
+#2 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#3 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#4 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#5 {main}
+[2026-05-17 03:23:56] [INFO] [guest] [::1] Password reset email sent | {"user_id":2,"email":"kimlesterlumibao@gmail.com"}
+[2026-05-17 03:25:34] [AUDIT] [guest] [::1] password.reset | {"model":"User","model_id":2}
+[2026-05-17 03:26:01] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-17 03:26:01] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-17 03:26:07] [AUDIT] [user:2] [::1] user.logout | {"model":"User","model_id":2}
+[2026-05-17 03:26:07] [INFO] [user:2] [::1] User logged out | {"user_id":2}
+[2026-05-17 03:40:59] [AUDIT] [user:2] [::1] user.login | {"model":"User","model_id":2,"new":{"email":"kimlesterlumibao@gmail.com","role":"customer"}}
+[2026-05-17 03:40:59] [INFO] [user:2] [::1] User logged in | {"user_id":2,"email":"kimlesterlumibao@gmail.com","role":"customer"}
+[2026-05-17 17:33:50] [INFO] [guest] [::1] Password reset email sent | {"user_id":12,"email":"rhoandeguzman1@gmail.com"}
+[2026-05-17 17:35:13] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:37:55] [AUDIT] [user:13] [::1] user.registered | {"model":"User","model_id":"13","new":{"email":"rhoandeguzman75@gmail.com"}}
+[2026-05-17 17:37:57] [INFO] [user:13] [::1] New user registered | {"user_id":"13","email":"rhoandeguzman75@gmail.com"}
+[2026-05-17 17:38:06] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:38:28] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:39:31] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:42:06] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:43:32] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:44:55] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 17:51:02] [ERROR] [guest] [::1] Uncaught RuntimeException: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampps\htdocs\flowershop_system\core\Database.php:37
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(44): Database->__construct()
+#1 C:\xampps\htdocs\flowershop_system\app\models\User.php(13): Database::getInstance()
+#2 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(13): User->__construct()
+#3 C:\xampps\htdocs\flowershop_system\core\Router.php(175): AuthController->__construct()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#5 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#6 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#7 {main}
+[2026-05-17 23:55:45] [ERROR] [guest] [::1] Uncaught PDOException: SQLSTATE[HY000]: General error: 1036 Table 'login_attempts' is read only in C:\xampps\htdocs\flowershop_system\core\Database.php:123
+#0 C:\xampps\htdocs\flowershop_system\core\Database.php(123): PDOStatement->execute(Array)
+#1 C:\xampps\htdocs\flowershop_system\core\Database.php(75): Database->prepare('DELETE FROM log...', Array)
+#2 C:\xampps\htdocs\flowershop_system\middleware\RateLimiter.php(149): Database->execute('DELETE FROM log...', Array)
+#3 C:\xampps\htdocs\flowershop_system\app\controllers\AuthController.php(29): RateLimiter::purgeOld()
+#4 C:\xampps\htdocs\flowershop_system\core\Router.php(181): AuthController->login(Array)
+#5 C:\xampps\htdocs\flowershop_system\core\Router.php(89): Router->callHandler(Array, Array)
+#6 C:\xampps\htdocs\flowershop_system\core\App.php(58): Router->dispatch()
+#7 C:\xampps\htdocs\flowershop_system\public\index.php(36): App->run()
+#8 {main}

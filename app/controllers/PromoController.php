@@ -162,28 +162,40 @@ class PromoController extends Controller {
     //  PUBLIC AJAX — POST /promo/validate
     // ══════════════════════════════════════════
 
-    public function validate(): void {
-        $this->requireAuth();
+    
+    // ─────────────────────────────────────────────────────────────────────
+    //  Add this method to PromoController
+    //  Route: POST /promo/validate  (already in routes.php)
+    // ─────────────────────────────────────────────────────────────────────
 
-        $code     = trim($this->post('code', ''));
-        $subtotal = (float)$this->post('subtotal', 0);
+    public function validate(): void
+    {
+        $this->requireAuth();   // customer must be logged in
 
-        if (empty($code)) {
+        $code     = strtoupper(trim($this->post('code', '')));
+        $subtotal = (float) $this->post('subtotal', 0);
+
+        if (!$code) {
             $this->jsonError('Please enter a promo code.');
             return;
         }
 
-        $result = $this->promoModel->validate($code, $subtotal);
+        $promoModel = new PromoCode();
+        $result     = $promoModel->validate($code, $subtotal);
 
         if ($result['error']) {
             $this->jsonError($result['error']);
             return;
         }
 
+        $promo = $result['promo'];
+
         $this->jsonSuccess([
-            'discount'    => $result['discount'],
+            'code'         => $promo['code'],
+            'discount'     => $result['discount'],
             'discount_fmt' => '₱' . number_format($result['discount'], 2),
-            'code'        => strtoupper($code),
+            'type'         => $promo['type'],
+            'value'        => $promo['value'],
         ], 'Promo code applied!');
     }
 
@@ -217,5 +229,46 @@ class PromoController extends Controller {
         if ($type === 'percent' && $value > 100) $errors[] = 'Percent discount cannot exceed 100.';
 
         return $errors;
+    }
+
+    // GET /shop/apply-promo?code=SUMMER20&subtotal=1500.00
+    public function applyPromo(): void
+    {
+        $code     = strtoupper(trim($_GET['code'] ?? ''));
+        $subtotal = (float) ($_GET['subtotal'] ?? 0);
+
+        if (!$code) {
+            $this->json(['success' => false, 'message' => 'Please enter a promo code.']);
+            return;
+        }
+
+        $promo = Promo::findActiveByCode($code); // new model method below
+
+        if (!$promo) {
+            $this->json(['success' => false, 'message' => 'Invalid or expired promo code.']);
+            return;
+        }
+
+        if ($promo['min_order'] > 0 && $subtotal < $promo['min_order']) {
+            $this->json([
+                'success' => false,
+                'message' => 'Minimum order of ₱' . number_format($promo['min_order'], 2) . ' required.',
+            ]);
+            return;
+        }
+
+        $discount = $promo['type'] === 'percent'
+            ? round($subtotal * ($promo['value'] / 100), 2)
+            : min((float) $promo['value'], $subtotal); // fixed can't exceed subtotal
+
+        $this->json([
+            'success'      => true,
+            'message'      => 'Promo applied!',
+            'code'         => $promo['code'],
+            'discount'     => $discount,
+            'discount_fmt' => '₱' . number_format($discount, 2),
+            'type'         => $promo['type'],
+            'value'        => $promo['value'],
+        ]);
     }
 }
